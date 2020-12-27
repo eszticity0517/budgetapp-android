@@ -14,7 +14,7 @@ class OpeningActivity : AppCompatActivity() {
     }
 
     fun goToSummaryPage(view: View?) {
-        val intent = Intent(this@OpeningActivity, OpeningActivity::class.java)
+        val intent = Intent(this@OpeningActivity, MainActivity::class.java)
         startActivity(intent)
     }
 }
