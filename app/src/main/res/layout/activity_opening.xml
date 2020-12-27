@@ -26,27 +26,43 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20sp"
             android:fontFamily="sans-serif"
-            android:text="Hello World!"
+            android:text="@string/question_title"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_marginTop="20sp"
+            android:contentDescription="@string/hand_holding_usd"
+            app:srcCompat="@drawable/ic_hand_holding_usd" />
+
         <TextView
             android:id="@+id/introduction_text_1"
             android:layout_width="match_parent"
-            android:layout_marginTop="20sp"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:layout_marginTop="20sp"
+            android:text="@string/introduction_text_first"
             android:textAlignment="center"
             android:textColor="#000000" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_marginTop="20sp"
+            android:contentDescription="@string/edit"
+            app:srcCompat="@drawable/ic_edit" />
 
         <TextView
             android:id="@+id/introduction_text_2"
             android:layout_width="match_parent"
-            android:layout_marginTop="20sp"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:layout_marginTop="20sp"
+            android:text="@string/introduction_text_second"
             android:textAlignment="center"
             android:textColor="#000000" />
     </LinearLayout>

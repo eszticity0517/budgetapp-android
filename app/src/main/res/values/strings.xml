@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Budget App</string>
+
+    <!-- Opening page texts -->
+    <string name="question_title">What brand of food, household product, clothing you come up with the most economically?</string>
+    <string name="introduction_text_first">See the difference between the most economical product and the price of the product you are used to buying.</string>
+    <string name="introduction_text_second">"This way, you can easily summarize how much you have saved in a given category, broken down by period."</string>
+    <!-- Image descriptions -->
+    <string name="hand_holding_usd">Hand holding USD</string>
+    <string name="edit">Edit</string>
 </resources>
