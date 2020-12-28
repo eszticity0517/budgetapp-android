@@ -35,5 +35,4 @@
     <include
         layout="@layout/content_main"
         android:foregroundTint="#FFFFFF" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
