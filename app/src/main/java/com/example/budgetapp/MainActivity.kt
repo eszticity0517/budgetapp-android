@@ -1,9 +1,14 @@
 package com.example.budgetapp
 
+import android.R.attr.*
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import android.text.InputType
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,8 +21,24 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Summary";
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+           createNewCategoryDialog()
         }
+    }
+
+    private fun createNewCategoryDialog()
+    {
+        // TODO: put it in a container for better margins / paddings.
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+
+        val builder = AlertDialog.Builder(this)
+                .setTitle("New category")
+                .setView(input)
+                .setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which ->
+                    // TODO: save new category in database
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+
+        builder.show()
     }
 }
