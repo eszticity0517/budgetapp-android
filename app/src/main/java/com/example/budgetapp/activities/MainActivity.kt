@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
                 // TODO Auto-generated method stub
             }
         })
-
     }
 
     private fun createNewCategoryDialog()
