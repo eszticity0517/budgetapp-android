@@ -44,6 +44,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="40sp" />
         </RelativeLayout>
+
+        <fragment
+            android:id="@+id/categoryFragment"
+            class="com.example.budgetapp.NoCategoryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

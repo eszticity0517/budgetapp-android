@@ -51,6 +51,16 @@ class MainActivity : AppCompatActivity() {
                 // TODO Auto-generated method stub
             }
         })
+
+        val firstFragment = NoCategoryFragment()
+        firstFragment.arguments = intent.extras
+
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.categoryFragment, firstFragment, "firstFragment")
+                .commit()
+        }
     }
 
     private fun createNewCategoryDialog()
