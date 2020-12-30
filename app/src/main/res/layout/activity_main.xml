@@ -45,9 +45,8 @@
                 android:layout_height="40sp" />
         </RelativeLayout>
 
-        <fragment
-            android:id="@+id/categoryFragment"
-            class="com.example.budgetapp.NoCategoryFragment"
+        <RelativeLayout
+            android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

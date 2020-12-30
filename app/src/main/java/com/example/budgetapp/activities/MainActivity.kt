@@ -72,13 +72,13 @@ class MainActivity : AppCompatActivity() {
             {
                 supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.categoryFragment, noCategoryFragment, "noCategoryFragment")
+                        .replace(R.id.fragmentContainer, noCategoryFragment, "noCategoryFragment")
                         .commit()
             }
             else {
                 supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.categoryFragment, categoriesFragment, "categoriesFragment")
+                        .replace(R.id.fragmentContainer, categoriesFragment, "categoriesFragment")
                         .commit()
             }
         }
@@ -96,14 +96,14 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(
                         android.R.string.ok,
                         DialogInterface.OnClickListener { dialog, which ->
-                            // TODO: save new category in database
+                            SaveCategory(this, "lel").execute()
                         })
                 .setNegativeButton(android.R.string.cancel, null)
 
         builder.show()
     }
 
-    class GetAllCategories(val mContext: Context): AsyncTask<String, Long, List<Category?>>() {
+    class GetAllCategories(mContext: Context): AsyncTask<String, Long, List<Category?>>() {
         private var context: Context = mContext
 
         override fun doInBackground(json: Array<String?>?): List<Category?>? {
@@ -116,7 +116,26 @@ class MainActivity : AppCompatActivity() {
                 budgetAppDatabase.close()
                 categories
             } catch (e: Exception) {
-                Log.e("", "Error occured while tried to process incoming payload", e)
+                Log.e("", "Error occurred while tried to get categories.", e)
+                null
+            }
+        }
+    }
+
+    class SaveCategory(mContext: Context, categoryName: String): AsyncTask<String, Long, Category?>() {
+        private var context: Context = mContext
+        private var categoryName = categoryName
+
+        override fun doInBackground(json: Array<String?>?): Category? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                var category = Category(name = categoryName)
+                budgetAppDatabase.CategoryDao().save(category)
+                budgetAppDatabase.close()
+                category
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to save category.", e)
                 null
             }
         }
