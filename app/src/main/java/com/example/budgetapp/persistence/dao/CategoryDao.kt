@@ -19,4 +19,7 @@ interface CategoryDao {
 
     @Query("DELETE FROM categories WHERE id=:id")
     fun deleteById(id: Long?): Int
+
+    @Query("SELECT * FROM categories")
+    fun getAll(): List<Category?>?
 }

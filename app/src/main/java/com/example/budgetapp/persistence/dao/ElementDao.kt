@@ -25,4 +25,7 @@ interface ElementDao {
 
     @Query("DELETE FROM elements WHERE categoryId=:categoryId")
     fun deleteAllByCategoryId(categoryId: Long?): Int
+
+    @Query("SELECT * FROM elements")
+    fun getAll(): List<Element?>?
 }
