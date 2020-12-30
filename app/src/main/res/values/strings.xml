@@ -25,4 +25,7 @@
         <item>This month</item>
         <item>This year</item>
     </string-array>
+
+    <!-- Summary texts -->
+    <string name="in_all">In all</string>
 </resources>
