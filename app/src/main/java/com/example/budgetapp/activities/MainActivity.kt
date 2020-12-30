@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         val categoriesFragment = CategoriesFragment()
         categoriesFragment.arguments = intent.extras
 
-        val budgetDatabase = BudgetAppDatabase(this)
 
         if (savedInstanceState == null) {
             val categories = GetAllCategories(this).execute()
@@ -76,6 +75,11 @@ class MainActivity : AppCompatActivity() {
                         .commit()
             }
             else {
+                val bundle = Bundle()
+                bundle.putString("categories", categories?.get().toString())
+
+                categoriesFragment.arguments = bundle
+
                 supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.fragmentContainer, categoriesFragment, "categoriesFragment")
