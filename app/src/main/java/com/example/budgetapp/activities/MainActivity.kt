@@ -2,9 +2,12 @@ package com.example.budgetapp
 
 import android.R.attr.*
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
+import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -12,6 +15,8 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import com.example.budgetapp.persistence.BudgetAppDatabase
+import com.example.budgetapp.persistence.entities.Category
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -31,18 +36,18 @@ class MainActivity : AppCompatActivity() {
         val spinner: Spinner = findViewById(R.id.periodSpinner)
 
         ArrayAdapter.createFromResource(
-            this,
-            R.array.periods,
-            android.R.layout.simple_spinner_item
+                this,
+                R.array.periods,
+                android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
         }
 
-        spinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
-                arg0: AdapterView<*>?, arg1: View?,
-                arg2: Int, arg3: Long
+                    arg0: AdapterView<*>?, arg1: View?,
+                    arg2: Int, arg3: Long
             ) {
                 //Do something
             }
@@ -50,16 +55,32 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(arg0: AdapterView<*>?) {
                 // TODO Auto-generated method stub
             }
-        })
+        }
 
-        val firstFragment = NoCategoryFragment()
-        firstFragment.arguments = intent.extras
+        val noCategoryFragment = NoCategoryFragment()
+        noCategoryFragment.arguments = intent.extras
+
+        val categoriesFragment = CategoriesFragment()
+        categoriesFragment.arguments = intent.extras
+
+        val budgetDatabase = BudgetAppDatabase(this)
 
         if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.categoryFragment, firstFragment, "firstFragment")
-                .commit()
+            val categories = GetAllCategories(this).execute()
+
+            if(categories?.get()?.size == 0 || categories?.get() == null)
+            {
+                supportFragmentManager
+                        .beginTransaction()
+                        .add(R.id.categoryFragment, noCategoryFragment, "noCategoryFragment")
+                        .commit()
+            }
+            else {
+                supportFragmentManager
+                        .beginTransaction()
+                        .add(R.id.categoryFragment, categoriesFragment, "categoriesFragment")
+                        .commit()
+            }
         }
     }
 
@@ -73,12 +94,31 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("New category")
                 .setView(input)
                 .setPositiveButton(
-                    android.R.string.ok,
-                    DialogInterface.OnClickListener { dialog, which ->
-                        // TODO: save new category in database
-                    })
+                        android.R.string.ok,
+                        DialogInterface.OnClickListener { dialog, which ->
+                            // TODO: save new category in database
+                        })
                 .setNegativeButton(android.R.string.cancel, null)
 
         builder.show()
+    }
+
+    class GetAllCategories(val mContext: Context): AsyncTask<String, Long, List<Category?>>() {
+        private var context: Context = mContext
+
+        override fun doInBackground(json: Array<String?>?): List<Category?>? {
+            var categories: List<Category?>?
+
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                categories = budgetAppDatabase.CategoryDao().getAll()
+                budgetAppDatabase.close()
+                categories
+            } catch (e: Exception) {
+                Log.e("", "Error occured while tried to process incoming payload", e)
+                null
+            }
+        }
     }
 }
