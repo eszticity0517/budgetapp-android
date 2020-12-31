@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
  */
 class CategoriesFragment : Fragment() {
 
+    private val categories : HashMap<String, Int>? = null
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -21,7 +23,6 @@ class CategoriesFragment : Fragment() {
         val categories  = bundle!!.getSerializable("categories") as HashMap<String, Int>
         print(categories?.size)
 
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }
 
@@ -29,6 +30,15 @@ class CategoriesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
-        summaryValue.text = "0 HUF"
+
+        var summaryValueCalculated = 0
+
+        if (categories != null) {
+            for(category in categories) {
+                summaryValueCalculated += category.value
+            }
+        }
+
+        summaryValue.text = "$summaryValueCalculated HUF"
     }
 }
