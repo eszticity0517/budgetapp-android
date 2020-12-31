@@ -17,6 +17,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Category
+import com.example.budgetapp.persistence.entities.Element
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -65,9 +66,9 @@ class MainActivity : AppCompatActivity() {
 
 
         if (savedInstanceState == null) {
-            val categories = GetAllCategories(this).execute()
+            val categories = GetAllCategories(this).execute().get()
 
-            if(categories?.get()?.size == 0 || categories?.get() == null)
+            if(categories?.size == 0 || categories == null)
             {
                 supportFragmentManager
                         .beginTransaction()
@@ -75,8 +76,17 @@ class MainActivity : AppCompatActivity() {
                         .commit()
             }
             else {
+                for(category in categories)
+                {
+                     var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
+
+                    elements?.forEach { element ->
+                        print(element?.originalPriceProductName)
+                    }
+                }
+
                 val bundle = Bundle()
-                bundle.putString("categories", categories?.get().toString())
+                bundle.putString("categories", categories?.toString())
 
                 categoriesFragment.arguments = bundle
 
@@ -121,6 +131,26 @@ class MainActivity : AppCompatActivity() {
                 categories
             } catch (e: Exception) {
                 Log.e("", "Error occurred while tried to get categories.", e)
+                null
+            }
+        }
+    }
+
+    class GetAllElementsByCategory(mContext: Context, categoryId: Long?):  AsyncTask<String, Long, List<Element?>?>() {
+        private var context: Context = mContext
+        private var categoryId: Long? = categoryId
+
+        override fun doInBackground(json: Array<String?>?): List<Element?>? {
+            var elements: List<Element?>?
+
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                elements = budgetAppDatabase.ElementDao().getAllByCategoryId(categoryId)
+                budgetAppDatabase.close()
+                elements
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to get elements by category ID.", e)
                 null
             }
         }
