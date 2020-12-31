@@ -21,7 +21,7 @@ interface ElementDao {
     fun findById(id: Long?): Element?
 
     @Query("SELECT * FROM elements WHERE categoryId = :id")
-    fun findByIdCategoryId(id: Long?): Element?
+    fun getAllByCategoryId(id: Long?): List<Element?>?
 
     @Query("DELETE FROM elements WHERE id=:id")
     fun deleteById(id: Long?): Int
