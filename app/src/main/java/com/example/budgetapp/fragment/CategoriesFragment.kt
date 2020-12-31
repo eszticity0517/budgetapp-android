@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -20,8 +18,7 @@ class CategoriesFragment : Fragment() {
     ): View? {
 
         val bundle = arguments
-        val categories = bundle!!.getString("categories")?.toList()
-
+        val categories  = bundle!!.getSerializable("categories") as HashMap<String, Int>
         print(categories?.size)
 
         // Inflate the layout for this fragment

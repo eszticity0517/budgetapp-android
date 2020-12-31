@@ -76,6 +76,8 @@ class MainActivity : AppCompatActivity() {
                         .commit()
             }
             else {
+                val categoriesAndValues = hashMapOf<String, Int>()
+
                 for(category in categories)
                 {
                      var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
@@ -83,10 +85,12 @@ class MainActivity : AppCompatActivity() {
                     elements?.forEach { element ->
                         print(element?.originalPriceProductName)
                     }
+
+                    categoriesAndValues[category?.name!!] = 0
                 }
 
                 val bundle = Bundle()
-                bundle.putString("categories", categories?.toString())
+                bundle.putSerializable("categories", categoriesAndValues)
 
                 categoriesFragment.arguments = bundle
 
