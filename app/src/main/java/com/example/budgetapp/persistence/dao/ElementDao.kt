@@ -11,8 +11,11 @@ interface ElementDao {
     @Insert(onConflict = ABORT)
     fun save(element: Element?): Long
 
-    @Query("SELECT * FROM elements WHERE name = :name")
-    fun findByName(name: String?): Element?
+    @Query("SELECT * FROM elements WHERE lowerPriceProductName = :name")
+    fun findByLowerPriceProductName(name: String?): Element?
+
+    @Query("SELECT * FROM elements WHERE originalPriceProductName = :name")
+    fun findByOriginalPriceProductName(name: String?): Element?
 
     @Query("SELECT * FROM elements WHERE id = :id")
     fun findById(id: Long?): Element?

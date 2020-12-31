@@ -11,11 +11,38 @@ data class Element (
     @Expose
     val id: Long? = null,
 
+    /**
+     * ID of the parent category (like food, cosmetics, etc.)
+     */
     @Expose
     @NonNull
     val categoryId: Long? = null,
 
+    /**
+     * Name of the lower price product.
+     */
     @Expose
     @NonNull
-    val name: String? = null
+    val lowerPriceProductName: String? = null,
+
+    /**
+     * Name of the original price product.
+     */
+    @Expose
+    @NonNull
+    val originalPriceProductName: String? = null,
+
+    /**
+     * Cheaper price for the desired product.
+     */
+    @Expose
+    @NonNull
+    val lowerPrice: Int? = null,
+
+    /**
+     * Original (higher) price for the desired product.
+     * */
+    @Expose
+    @NonNull
+    val originalPrice: Int? = null
 )
