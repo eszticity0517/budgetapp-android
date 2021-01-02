@@ -61,8 +61,4 @@
         app:rippleColor="#E27D1E"
         app:srcCompat="@drawable/ic_baseline_add_24"
         app:tint="@color/white" />
-
-    <include
-        layout="@layout/content_main"
-        android:foregroundTint="#FFFFFF" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
