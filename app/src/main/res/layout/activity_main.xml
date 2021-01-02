@@ -44,6 +44,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="40sp" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

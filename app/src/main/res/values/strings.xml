@@ -16,11 +16,16 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
+    <!-- Main page fragments -->
+    <string name="no_categories_title">You have no categories yet.</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <!-- Selectable periods for showing data -->
     <string-array name="periods">
         <item>This month</item>
         <item>This year</item>
     </string-array>
+
+    <!-- Summary texts -->
+    <string name="in_all">In all</string>
 </resources>
