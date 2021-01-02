@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -12,7 +14,7 @@ import androidx.fragment.app.Fragment
  */
 class CategoriesFragment : Fragment() {
 
-    private val categories : HashMap<String, Int>? = null
+    private var categories : HashMap<String, Int>? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -20,7 +22,7 @@ class CategoriesFragment : Fragment() {
     ): View? {
 
         val bundle = arguments
-        val categories  = bundle!!.getSerializable("categories") as HashMap<String, Int>
+        categories  = bundle!!.getSerializable("categories") as HashMap<String, Int>
         print(categories?.size)
 
         return inflater.inflate(R.layout.fragment_categories, container, false)
@@ -39,5 +41,29 @@ class CategoriesFragment : Fragment() {
 
         // Showing all the saved money.
         summaryValue.text = "$summaryValueCalculated HUF"
+
+        val summaryTable : TableLayout = view.findViewById(R.id.summaryTable) as TableLayout;
+
+        // Fill table programmatically with category and price data.
+
+        categories?.forEach { category ->
+            // Giving TextView-s the parent's layout params.
+            val params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+
+            val categoryNameText = TextView(this.activity)
+            categoryNameText.text = category.key
+            categoryNameText.layoutParams = params
+
+            val categoryValueText = TextView(this.activity)
+            categoryValueText.text = category.value.toString()
+            categoryNameText.layoutParams = params
+
+            val tableRow = TableRow(this.activity)
+
+            tableRow.addView(categoryNameText)
+            tableRow.addView(categoryValueText)
+
+            summaryTable.addView(tableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
+        }
     }
 }

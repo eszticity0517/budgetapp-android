@@ -112,10 +112,12 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("New category")
                 .setView(input)
                 .setPositiveButton(
-                        android.R.string.ok,
-                        DialogInterface.OnClickListener { dialog, which ->
-                            SaveCategory(this, "lel").execute()
-                        })
+                        android.R.string.ok
+                ) { _, _ ->
+                    // TODO: add validation for this field.
+                    val text = input.text.toString()
+                    SaveCategory(this, text).execute()
+                }
                 .setNegativeButton(android.R.string.cancel, null)
 
         builder.show()
