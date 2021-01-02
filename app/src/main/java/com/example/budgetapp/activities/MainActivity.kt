@@ -1,9 +1,7 @@
 package com.example.budgetapp
 
-import android.R.attr.*
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
@@ -121,6 +119,10 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(android.R.string.cancel, null)
 
         builder.show()
+    }
+
+    override fun onBackPressed() {
+        // Do nothing here, just serves to disable back navigation.
     }
 
     /**
