@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * A simple [Fragment] subclass for showing existing categories.
  */
 class CategoriesFragment : Fragment() {
 
@@ -29,16 +29,15 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
-
         var summaryValueCalculated = 0
 
-        if (categories != null) {
-            for(category in categories) {
-                summaryValueCalculated += category.value
-            }
+        categories?.forEach { category ->
+            summaryValueCalculated += category.value
         }
 
+        val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
+
+        // Showing all the saved money.
         summaryValue.text = "$summaryValueCalculated HUF"
     }
 }

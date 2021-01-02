@@ -1,10 +1,11 @@
 package com.example.budgetapp.persistence.entities
 import androidx.annotation.NonNull
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 
-@Entity(tableName = "elements")
+@Entity(tableName = "elements", indices = [Index(value = ["lowerPriceProductName", "originalPriceProductName"], unique = true)])
 data class Element (
     @NonNull
     @PrimaryKey(autoGenerate = true)

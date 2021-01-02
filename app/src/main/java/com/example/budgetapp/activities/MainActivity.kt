@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
            createNewCategoryDialog()
         }
+
         val spinner: Spinner = findViewById(R.id.periodSpinner)
 
         ArrayAdapter.createFromResource(
@@ -58,24 +59,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val noCategoryFragment = NoCategoryFragment()
-        noCategoryFragment.arguments = intent.extras
-
-        val categoriesFragment = CategoriesFragment()
-        categoriesFragment.arguments = intent.extras
-
-
         if (savedInstanceState == null) {
             val categories = GetAllCategories(this).execute().get()
 
             if(categories?.size == 0 || categories == null)
             {
+                // If no category, then show a message for the user.
+                val noCategoryFragment = NoCategoryFragment()
+                noCategoryFragment.arguments = intent.extras
+
                 supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.fragmentContainer, noCategoryFragment, "noCategoryFragment")
                         .commit()
             }
             else {
+                // Put categories and money amount together in a map.
                 val categoriesAndValues = hashMapOf<String, Int>()
 
                 for(category in categories)
@@ -92,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                 val bundle = Bundle()
                 bundle.putSerializable("categories", categoriesAndValues)
 
+                val categoriesFragment = CategoriesFragment()
                 categoriesFragment.arguments = bundle
 
                 supportFragmentManager
@@ -121,6 +121,9 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Gets all existing categories from the database.
+     */
     class GetAllCategories(mContext: Context): AsyncTask<String, Long, List<Category?>>() {
         private var context: Context = mContext
 
@@ -140,6 +143,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Gets all existing elements related to a specific category spotted by its ID.
+     */
     class GetAllElementsByCategory(mContext: Context, categoryId: Long?):  AsyncTask<String, Long, List<Element?>?>() {
         private var context: Context = mContext
         private var categoryId: Long? = categoryId
@@ -160,6 +166,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Inserts a very new category in the database.
+     */
     class SaveCategory(mContext: Context, categoryName: String): AsyncTask<String, Long, Category?>() {
         private var context: Context = mContext
         private var categoryName = categoryName
