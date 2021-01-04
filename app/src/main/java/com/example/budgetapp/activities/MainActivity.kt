@@ -6,9 +6,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.view.View
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Category
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             if(categories?.size == 0 || categories == null)
             {
                 // If no category, then show a message for the user.
-                val noCategoryFragment = NoCategoryFragment()
+                val noCategoryFragment = NoCategoriesFragment()
                 noCategoryFragment.arguments = intent.extras
 
                 supportFragmentManager
