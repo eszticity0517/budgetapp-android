@@ -11,6 +11,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import com.example.budgetapp.R
 import com.example.budgetapp.activities.CategoryActivity
+import com.example.budgetapp.activities.ElementDetailsActivity
 
 /**
  * A simple [Fragment] subclass for showing existing elements for a given category.
@@ -71,8 +72,8 @@ class ElementsFragment : Fragment() {
 
             // Add click listener to the row.
             tableRow.setOnClickListener{
-                val intent = Intent(this.activity, CategoryActivity::class.java)
-                intent?.putExtra("categoryName", element?.key)
+                val intent = Intent(this.activity, ElementDetailsActivity::class.java)
+                intent?.putExtra("elementName", element?.key)
 
                 startActivity(intent)
             }
