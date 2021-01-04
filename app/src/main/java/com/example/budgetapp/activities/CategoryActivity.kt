@@ -20,6 +20,8 @@ class CategoryActivity : AppCompatActivity() {
         actionBar?.title = categoryName
         supportActionBar?.title = categoryName
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()

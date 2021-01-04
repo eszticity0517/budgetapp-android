@@ -12,7 +12,12 @@
         <activity
             android:name=".activities.CategoryActivity"
             android:label="@string/title_activity_category"
-            android:theme="@style/Theme.BudgetApp.NoActionBar"></activity>
+            android:theme="@style/Theme.BudgetApp.NoActionBar"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.budgetapp.MainActivity"/>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
