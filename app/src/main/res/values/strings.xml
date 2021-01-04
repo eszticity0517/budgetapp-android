@@ -26,14 +26,11 @@
     <!-- Selectable periods for showing data -->
     <string name="in_all">In all</string>
 
-    <!-- Summary texts -->
-
-    <string-array name="periods">
-        <item>This month</item>
-        <item>This year</item>
-    </string-array>
-
     <!-- Error texts -->
     <string name="name_is_mandatory">Name is mandatory.</string>
     <string name="name_is_reserved">This name is reserved. Please choose another.</string>
+
+    <!-- icon button titles -->
+    <string name="fab_category">Icon button for creating new category.</string>
+    <string name="fab_element">Icon button for creating new element.</string>
 </resources>

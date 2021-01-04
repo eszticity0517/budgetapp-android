@@ -23,35 +23,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-//        actionBar?.title = "Summary";
-//        supportActionBar?.title = "Summary";
-
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
            createNewCategoryDialog()
-        }
-
-        val spinner: Spinner = findViewById(R.id.periodSpinner)
-
-        ArrayAdapter.createFromResource(
-                this,
-                R.array.periods,
-                android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-        }
-
-        spinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                    arg0: AdapterView<*>?, arg1: View?,
-                    arg2: Int, arg3: Long
-            ) {
-                //Do something
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>?) {
-                // TODO Auto-generated method stub
-            }
         }
 
         if (savedInstanceState == null) {
@@ -158,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // TODO: this has a duplicate, find a way to put everything to helper class.
     /**
      * Gets all existing elements related to a specific category spotted by its ID.
      */
