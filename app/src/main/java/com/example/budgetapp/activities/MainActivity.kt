@@ -7,11 +7,8 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Category
@@ -110,15 +107,29 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("New category")
                 .setView(input)
                 .setPositiveButton(
-                        android.R.string.ok
-                ) { _, _ ->
-                    // TODO: add validation for this field.
-                    val text = input.text.toString()
-                    SaveCategory(this, text).execute()
-                }
+                        android.R.string.ok, null
+                )
                 .setNegativeButton(android.R.string.cancel, null)
 
-        builder.show()
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val text = input.text.toString()
+
+            when {
+                text.isNullOrEmpty() -> {
+                    input?.error = getString(R.string.name_is_mandatory)
+                }
+                GetAllCategories(this).execute().get().any { it?.name == text } -> {
+                    input?.error = getString(R.string.name_is_reserved)
+                }
+                else -> {
+                    SaveCategory(this, text).execute()
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
