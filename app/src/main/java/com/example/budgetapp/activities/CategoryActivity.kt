@@ -24,6 +24,8 @@ import com.google.android.material.snackbar.Snackbar
 
 class CategoryActivity : AppCompatActivity() {
 
+    private var categoryId : Long? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
@@ -42,7 +44,7 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            val categoryId = GetCategoryIdByName(this, categoryName).execute().get()
+            categoryId = GetCategoryIdByName(this, categoryName).execute().get()
 
             if (!categoryId.toString().isNullOrEmpty())
             {
@@ -145,21 +147,40 @@ class CategoryActivity : AppCompatActivity() {
 
         val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener {
-            val text = lowerPriceProductNameText.text.toString()
-            dialog.dismiss()
+            val lowerPriceProductName = lowerPriceProductNameText.text.toString()
+            val lowerPriceProductPrice = lowerPriceProductPriceText.text.toString()
 
-//            when {
-//                text.isNullOrEmpty() -> {
-//                    input?.error = getString(R.string.name_is_mandatory)
-//                }
-//                CategoryActivity.GetAllElements(this).execute().get().any { it?.name == text } -> {
-//                    input?.error = getString(R.string.name_is_reserved)
-//                }
-//                else -> {
-//                    CategoryActivity.SaveElement(this, 1, 1, "lel", "lelt").execute()
-//                    dialog.dismiss()
-//                }
-//            }
+            val originalPriceProductName = originalPriceProductNameText.text.toString()
+            val originalPriceProductPrice = originalPriceProductPriceText.text.toString()
+
+            when {
+                lowerPriceProductName.isNullOrEmpty() -> {
+                    lowerPriceProductNameText?.error = getString(R.string.name_is_mandatory)
+                }
+                originalPriceProductName.isNullOrEmpty() -> {
+                    originalPriceProductNameText?.error = getString(R.string.name_is_mandatory)
+                }
+
+                lowerPriceProductPrice.isNullOrEmpty() -> {
+                    lowerPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
+                }
+                originalPriceProductPrice.isNullOrEmpty() -> {
+                    originalPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
+                }
+
+                GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName} -> {
+                    lowerPriceProductNameText?.error = getString(R.string.name_is_reserved)
+                }
+
+                GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName} -> {
+                    originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
+                }
+
+                else -> {
+                    SaveElement(this, 1, 1, "lel", "lelt", this.categoryId ).execute()
+                    dialog.dismiss()
+                }
+            }
         }
     }
 
@@ -187,19 +208,26 @@ class CategoryActivity : AppCompatActivity() {
     /**
      * Inserts a very new element in the database.
      */
-    class SaveElement(mContext: Context, lowerPrice: Int, originalPrice: Int, lowerPriceProductName: String, originalPriceProductName: String): AsyncTask<String, Long, Element?>() {
+    class SaveElement(mContext: Context, lowerPrice: Int, originalPrice: Int, lowerPriceProductName: String, originalPriceProductName: String, categoryId: Long?): AsyncTask<String, Long, Element?>() {
         private var context: Context = mContext
         private var lowerPriceProductName = lowerPriceProductName
         private var originalPriceProductName = originalPriceProductName
 
         private var lowerPrice = lowerPrice
         private var originalPrice = originalPrice
+        private var categoryId = categoryId
 
         override fun doInBackground(json: Array<String?>?): Element? {
             return try {
                 val budgetAppDatabase = BudgetAppDatabase(context)
 
-                var element = Element(lowerPrice = lowerPrice, originalPrice = originalPrice, lowerPriceProductName = lowerPriceProductName, originalPriceProductName = originalPriceProductName)
+                var element = Element(
+                        lowerPrice = lowerPrice,
+                        originalPrice = originalPrice,
+                        lowerPriceProductName = lowerPriceProductName,
+                        originalPriceProductName = originalPriceProductName,
+                        categoryId = categoryId
+                )
                 budgetAppDatabase.ElementDao().save(element)
                 budgetAppDatabase.close()
                 element

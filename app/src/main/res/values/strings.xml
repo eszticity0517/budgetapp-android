@@ -32,6 +32,7 @@
     <!-- Error texts -->
     <string name="name_is_mandatory">Name is mandatory.</string>
     <string name="name_is_reserved">This name is reserved. Please choose another.</string>
+    <string name="price_is_mandatory">Price is mandatory.</string>
 
     <!-- icon button titles -->
     <string name="fab_category">Icon button for creating new category.</string>
