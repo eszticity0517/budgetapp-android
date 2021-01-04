@@ -1,5 +1,6 @@
 package com.example.budgetapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.budgetapp.activities.CategoryActivity
 
 /**
  * A simple [Fragment] subclass for showing existing categories.
@@ -23,7 +25,6 @@ class CategoriesFragment : Fragment() {
 
         val bundle = arguments
         categories  = bundle!!.getSerializable("categories") as HashMap<String, Int>
-        print(categories?.size)
 
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }
@@ -31,6 +32,7 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Calculating saved money amount.
         var summaryValueCalculated = 0
 
         categories?.forEach { category ->
@@ -62,6 +64,14 @@ class CategoriesFragment : Fragment() {
 
             tableRow.addView(categoryNameText)
             tableRow.addView(categoryValueText)
+
+            // Add click listener to the row.
+            tableRow.setOnClickListener{
+                val intent = Intent(this.activity, CategoryActivity::class.java)
+                intent?.putExtra("categoryName", category?.key)
+
+                startActivity(intent)
+            }
 
             summaryTable.addView(tableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
         }
