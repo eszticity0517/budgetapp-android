@@ -45,13 +45,15 @@ class MainActivity : AppCompatActivity() {
 
                 for(category in categories)
                 {
-                     var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
+                    var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
+
+                    var savedAmount = 0
 
                     elements?.forEach { element ->
-                        print(element?.originalPriceProductName)
+                      savedAmount += element?.originalPrice!!.minus(element?.lowerPrice!!)
                     }
 
-                    categoriesAndValues[category?.name!!] = 0
+                    categoriesAndValues[category?.name!!] = savedAmount
                 }
 
                 val bundle = Bundle()

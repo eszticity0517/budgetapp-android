@@ -69,8 +69,8 @@ class CategoryActivity : AppCompatActivity() {
                             print(element?.originalPriceProductName)
                         }
 
-                        // TODO: find out how will this work.
-                        //elementsAndValues[element?.name!!] = 0
+                        // The amount of saved money.
+                        elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(element!!.lowerPrice!!)
                     }
 
                     val bundle = Bundle()
