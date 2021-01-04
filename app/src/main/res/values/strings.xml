@@ -2,7 +2,7 @@
     <string name="app_name">Budget App</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Summary</string>
     <string name="title_activity_category">CategoryActivity</string>
 
     <!-- Opening page texts -->
