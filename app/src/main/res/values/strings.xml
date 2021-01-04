@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Budget App</string>
 
+    <!-- Activity titles -->
+    <string name="title_activity_main">Summary</string>
+    <string name="title_activity_category">CategoryActivity</string>
+
     <!-- Opening page texts -->
     <string name="question_title">What brand of food, household product, clothing you come up with the most economically?</string>
     <string name="introduction_text_first">See the difference between the most economical product and the price of the product you are used to buying.</string>
@@ -9,7 +13,7 @@
     <string name="hand_holding_usd">Hand holding USD</string>
     <string name="edit">Edit</string>
     <string name="get_started">Get started</string>
-    <string name="title_activity_main">MainActivity</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -18,14 +22,21 @@
 
     <!-- Main page fragments -->
     <string name="no_categories_title">You have no categories yet.</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Category page fragments -->
+    <string name="no_elements_title">You have no elements yet for this category.</string>
 
     <!-- Selectable periods for showing data -->
-    <string-array name="periods">
-        <item>This month</item>
-        <item>This year</item>
-    </string-array>
-
-    <!-- Summary texts -->
     <string name="in_all">In all</string>
+
+    <!-- Error texts -->
+    <string name="name_is_mandatory">Name is mandatory.</string>
+    <string name="name_is_reserved">This name is reserved. Please choose another.</string>
+    <string name="price_is_mandatory">Price is mandatory.</string>
+
+    <!-- icon button titles -->
+    <string name="fab_category">Icon button for creating new category.</string>
+    <string name="fab_element">Icon button for creating new element.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

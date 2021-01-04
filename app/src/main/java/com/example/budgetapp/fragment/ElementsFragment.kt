@@ -1,32 +1,36 @@
-package com.example.budgetapp
+package com.example.budgetapp.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import com.example.budgetapp.R
 import com.example.budgetapp.activities.CategoryActivity
 
 /**
- * A simple [Fragment] subclass for showing existing categories.
+ * A simple [Fragment] subclass for showing existing elements for a given category.
  */
-class CategoriesFragment : Fragment() {
+class ElementsFragment : Fragment() {
+    private var elements : HashMap<String, Int>? = null
 
-    private var categories : HashMap<String, Int>? = null
-
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val bundle = arguments
-        categories  = bundle!!.getSerializable("categories") as HashMap<String, Int>
+        elements  = bundle!!.getSerializable("elements") as HashMap<String, Int>
+    }
 
-        return inflater.inflate(R.layout.fragment_categories, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_element, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,8 +39,8 @@ class CategoriesFragment : Fragment() {
         // Calculating saved money amount.
         var summaryValueCalculated = 0
 
-        categories?.forEach { category ->
-            summaryValueCalculated += category.value
+        elements?.forEach { element ->
+            summaryValueCalculated += element.value
         }
 
         val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
@@ -48,16 +52,16 @@ class CategoriesFragment : Fragment() {
 
         // Fill table programmatically with category and price data.
 
-        categories?.forEach { category ->
+        elements?.forEach { element ->
             // Giving TextView-s the parent's layout params.
             val params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
 
             val categoryNameText = TextView(this.activity)
-            categoryNameText.text = category.key
+            categoryNameText.text = element.key
             categoryNameText.layoutParams = params
 
             val categoryValueText = TextView(this.activity)
-            categoryValueText.text = category.value.toString()
+            categoryValueText.text = element.value.toString()
             categoryNameText.layoutParams = params
 
             val tableRow = TableRow(this.activity)
@@ -68,7 +72,7 @@ class CategoriesFragment : Fragment() {
             // Add click listener to the row.
             tableRow.setOnClickListener{
                 val intent = Intent(this.activity, CategoryActivity::class.java)
-                intent?.putExtra("categoryName", category?.key)
+                intent?.putExtra("categoryName", element?.key)
 
                 startActivity(intent)
             }

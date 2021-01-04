@@ -6,12 +6,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Category
@@ -26,35 +21,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        actionBar?.title = "Summary";
-        supportActionBar?.title = "Summary";
-
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
            createNewCategoryDialog()
-        }
-
-        val spinner: Spinner = findViewById(R.id.periodSpinner)
-
-        ArrayAdapter.createFromResource(
-                this,
-                R.array.periods,
-                android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-        }
-
-        spinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                    arg0: AdapterView<*>?, arg1: View?,
-                    arg2: Int, arg3: Long
-            ) {
-                //Do something
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>?) {
-                // TODO Auto-generated method stub
-            }
         }
 
         if (savedInstanceState == null) {
@@ -63,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             if(categories?.size == 0 || categories == null)
             {
                 // If no category, then show a message for the user.
-                val noCategoryFragment = NoCategoryFragment()
+                val noCategoryFragment = NoCategoriesFragment()
                 noCategoryFragment.arguments = intent.extras
 
                 supportFragmentManager
@@ -77,13 +45,15 @@ class MainActivity : AppCompatActivity() {
 
                 for(category in categories)
                 {
-                     var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
+                    var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
+
+                    var savedAmount = 0
 
                     elements?.forEach { element ->
-                        print(element?.originalPriceProductName)
+                      savedAmount += element?.originalPrice!!.minus(element?.lowerPrice!!)
                     }
 
-                    categoriesAndValues[category?.name!!] = 0
+                    categoriesAndValues[category?.name!!] = savedAmount
                 }
 
                 val bundle = Bundle()
@@ -110,15 +80,29 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("New category")
                 .setView(input)
                 .setPositiveButton(
-                        android.R.string.ok
-                ) { _, _ ->
-                    // TODO: add validation for this field.
-                    val text = input.text.toString()
-                    SaveCategory(this, text).execute()
-                }
+                        android.R.string.ok, null
+                )
                 .setNegativeButton(android.R.string.cancel, null)
 
-        builder.show()
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val text = input.text.toString()
+
+            when {
+                text.isNullOrEmpty() -> {
+                    input?.error = getString(R.string.name_is_mandatory)
+                }
+                GetAllCategories(this).execute().get().any { it?.name == text } -> {
+                    input?.error = getString(R.string.name_is_reserved)
+                }
+                else -> {
+                    SaveCategory(this, text).execute()
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -147,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // TODO: this has a duplicate, find a way to put everything to helper class.
     /**
      * Gets all existing elements related to a specific category spotted by its ID.
      */

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:statusBarBackground="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".activities.CategoryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +19,7 @@
             app:popupTheme="@style/Theme.BudgetApp.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,9 +44,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:contentDescription="@string/fab_category"
+        android:contentDescription="@string/fab_element"
         app:backgroundTint="#E27D1E"
         app:rippleColor="#E27D1E"
         app:srcCompat="@drawable/ic_baseline_add_24"
         app:tint="@color/white" />
+
+    <include layout="@layout/content_category" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

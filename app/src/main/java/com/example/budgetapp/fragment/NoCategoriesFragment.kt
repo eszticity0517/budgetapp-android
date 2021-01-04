@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 /**
  * A simple [Fragment] for showing a text about not having any categories.
  */
-class NoCategoryFragment : Fragment() {
+class NoCategoriesFragment : Fragment() {
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
