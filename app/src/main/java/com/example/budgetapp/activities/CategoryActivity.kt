@@ -106,13 +106,36 @@ class CategoryActivity : AppCompatActivity() {
 
     private fun createNewElementDialog()
     {
-        // TODO: put it in a container for better margins / paddings.
-        val input = EditText(this)
-        input.inputType = InputType.TYPE_CLASS_TEXT
 
+        val originalPriceProductNameText = EditText(this)
+        originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
+        originalPriceProductNameText.hint = "Original product name"
+
+        val originalPriceProductPriceText = EditText(this)
+        originalPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
+        originalPriceProductPriceText.hint = "Original product price"
+
+        val lowerPriceProductNameText = EditText(this)
+        lowerPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
+        lowerPriceProductNameText.hint = "Cheaper product name"
+
+        val lowerPriceProductPriceText = EditText(this)
+        lowerPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
+        lowerPriceProductPriceText.hint = "Cheaper product price"
+
+        val linearLayout = LinearLayout(this)
+        linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        linearLayout.orientation = LinearLayout.VERTICAL
+
+        linearLayout.addView(originalPriceProductNameText)
+        linearLayout.addView(originalPriceProductPriceText)
+        linearLayout.addView(lowerPriceProductNameText)
+        linearLayout.addView(lowerPriceProductPriceText)
+
+        // TODO: put it in a container for better margins / paddings.
         val builder = AlertDialog.Builder(this)
                 .setTitle("New element")
-                .setView(input)
+                .setView(linearLayout)
                 .setPositiveButton(
                         android.R.string.ok, null
                 )
@@ -122,7 +145,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener {
-            val text = input.text.toString()
+            val text = lowerPriceProductNameText.text.toString()
             dialog.dismiss()
 
 //            when {
