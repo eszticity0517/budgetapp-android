@@ -23,6 +23,9 @@
     <!-- Main page fragments -->
     <string name="no_categories_title">You have no categories yet.</string>
 
+    <!-- Category page fragments -->
+    <string name="no_elements_title">You have no elements yet for this category.</string>
+
     <!-- Selectable periods for showing data -->
     <string name="in_all">In all</string>
 
