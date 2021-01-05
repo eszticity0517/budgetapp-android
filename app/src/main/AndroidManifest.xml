@@ -12,6 +12,7 @@
         <activity
             android:name=".activities.ElementDetailsActivity"
             android:label="@string/title_activity_element_details"
+            android:screenOrientation = "portrait"
             android:parentActivityName=".activities.CategoryActivity"
             android:theme="@style/Theme.BudgetApp.NoActionBar">
         <meta-data
@@ -22,6 +23,7 @@
         <activity
             android:name=".activities.CategoryActivity"
             android:label="@string/title_activity_category"
+            android:screenOrientation = "portrait"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.BudgetApp.NoActionBar">
             <meta-data
@@ -31,8 +33,11 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation = "portrait"
             android:theme="@style/Theme.BudgetApp.NoActionBar" />
-        <activity android:name=".OpeningActivity">
+        <activity
+            android:name=".OpeningActivity"
+            android:screenOrientation = "portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
