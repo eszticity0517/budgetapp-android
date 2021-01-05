@@ -1,23 +1,27 @@
 package com.example.budgetapp.activities
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
+import android.widget.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.budgetapp.MainActivity
 import com.example.budgetapp.R
 import com.example.budgetapp.persistence.BudgetAppDatabase
+import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.entities.Element
 
 class ElementDetailsActivity : AppCompatActivity() {
+
+    private var elementId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val element = GetElementByName(this, categoryName).execute().get()
+        elementId = element?.id
 
         // Calculating difference between lower and higher price.
         var differenceCalculated = element?.originalPrice!!.minus(element?.lowerPrice!!)
@@ -92,13 +97,139 @@ class ElementDetailsActivity : AppCompatActivity() {
         val id: Int = item.itemId
 
         if (id == R.id.editButton) {
-            // CreateEditElementDialog()
+            CreateEditElementDialog()
         }
 
         if (id == R.id.deleteButton) {
             // CreateDeleteElementDialog()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun CreateEditElementDialog()
+    {
+        val originalPriceProductNameText = EditText(this)
+        originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
+        originalPriceProductNameText.hint = "Original product name"
+
+        val originalPriceProductPriceText = EditText(this)
+        originalPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
+        originalPriceProductPriceText.hint = "Original product price"
+
+        val lowerPriceProductNameText = EditText(this)
+        lowerPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
+        lowerPriceProductNameText.hint = "Cheaper product name"
+
+        val lowerPriceProductPriceText = EditText(this)
+        lowerPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
+        lowerPriceProductPriceText.hint = "Cheaper product price"
+
+        val linearLayout = LinearLayout(this)
+        linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        linearLayout.orientation = LinearLayout.VERTICAL
+
+        linearLayout.addView(originalPriceProductNameText)
+        linearLayout.addView(originalPriceProductPriceText)
+        linearLayout.addView(lowerPriceProductNameText)
+        linearLayout.addView(lowerPriceProductPriceText)
+
+        // TODO: put it in a container for better margins / paddings.
+        val builder = AlertDialog.Builder(this)
+            .setTitle("New element")
+            .setView(linearLayout)
+            .setPositiveButton(
+                android.R.string.ok, null
+            )
+            .setNegativeButton(android.R.string.cancel, null)
+
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val lowerPriceProductName = lowerPriceProductNameText.text.toString()
+            val lowerPriceProductPrice = lowerPriceProductPriceText.text.toString()
+
+            val originalPriceProductName = originalPriceProductNameText.text.toString()
+            val originalPriceProductPrice = originalPriceProductPriceText.text.toString()
+
+            when {
+                lowerPriceProductName.isNullOrEmpty() -> {
+                    lowerPriceProductNameText?.error = getString(R.string.name_is_mandatory)
+                }
+                originalPriceProductName.isNullOrEmpty() -> {
+                    originalPriceProductNameText?.error = getString(R.string.name_is_mandatory)
+                }
+
+                lowerPriceProductPrice.isNullOrEmpty() -> {
+                    lowerPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
+                }
+                originalPriceProductPrice.isNullOrEmpty() -> {
+                    originalPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
+                }
+
+                CategoryActivity.GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName && it?.id != elementId} -> {
+                    lowerPriceProductNameText?.error = getString(R.string.name_is_reserved)
+                }
+
+                CategoryActivity.GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName && it?.id != elementId} -> {
+                    originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
+                }
+
+                else -> {
+                    UpdateElement(
+                        this,
+                        lowerPriceProductPrice.toInt(),
+                        originalPriceProductPrice.toInt(),
+                        lowerPriceProductName,
+                        originalPriceProductName,
+                        this.elementId
+                    ).execute()
+                    dialog.dismiss()
+                }
+            }
+        }
+    }
+
+    /**
+     * Inserts a very new category in the database.
+     */
+    class UpdateElement(
+        mContext: Context,
+        lowerPrice: Int,
+        originalPrice: Int,
+        lowerPriceProductName: String,
+        originalPriceProductName: String,
+        elementId: Long?
+    ): AsyncTask<String, Long, Element?>() {
+        private var context: Context = mContext
+        private var lowerPriceProductName = lowerPriceProductName
+        private var originalPriceProductName = originalPriceProductName
+
+        private var lowerPrice = lowerPrice
+        private var originalPrice = originalPrice
+        private var elementId = elementId
+
+        override fun doInBackground(json: Array<String?>?): Element? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                var element = budgetAppDatabase.ElementDao().findById(elementId)
+                element?.lowerPrice = lowerPrice
+                element?.lowerPriceProductName = lowerPriceProductName
+                element?.originalPrice = originalPrice
+                element?.originalPriceProductName = originalPriceProductName
+
+                budgetAppDatabase.ElementDao().update(element)
+                budgetAppDatabase.close()
+                element
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to save category.", e)
+                null
+            }
+        }
     }
 
 
