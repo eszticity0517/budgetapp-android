@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -79,6 +81,26 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         summaryTable.addView(tableRow2, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actions, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+
+        if (id == R.id.editButton) {
+            // CreateEditElementDialog()
+        }
+
+        if (id == R.id.deleteButton) {
+            // CreateDeleteElementDialog()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     /**
      * Gets element with the provided name.
