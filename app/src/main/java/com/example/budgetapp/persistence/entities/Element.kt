@@ -17,33 +17,33 @@ data class Element (
      */
     @Expose
     @NonNull
-    val categoryId: Long? = null,
+    var categoryId: Long? = null,
 
     /**
      * Name of the lower price product.
      */
     @Expose
     @NonNull
-    val lowerPriceProductName: String? = null,
+    var lowerPriceProductName: String? = null,
 
     /**
      * Name of the original price product.
      */
     @Expose
     @NonNull
-    val originalPriceProductName: String? = null,
+    var originalPriceProductName: String? = null,
 
     /**
      * Cheaper price for the desired product.
      */
     @Expose
     @NonNull
-    val lowerPrice: Int? = null,
+    var lowerPrice: Int? = null,
 
     /**
      * Original (higher) price for the desired product.
      * */
     @Expose
     @NonNull
-    val originalPrice: Int? = null
+    var originalPrice: Int? = null
 )
