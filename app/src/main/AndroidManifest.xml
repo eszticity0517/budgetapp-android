@@ -10,13 +10,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetApp">
         <activity
+            android:name=".activities.ElementDetailsActivity"
+            android:label="@string/title_activity_element_details"
+            android:parentActivityName=".activities.CategoryActivity"
+            android:theme="@style/Theme.BudgetApp.NoActionBar">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.budgetapp.activities.CategoryActivity" />
+        </activity>
+
+        <activity
             android:name=".activities.CategoryActivity"
             android:label="@string/title_activity_category"
-            android:theme="@style/Theme.BudgetApp.NoActionBar"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.BudgetApp.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.budgetapp.MainActivity"/>
+                android:value="com.example.budgetapp.MainActivity" />
         </activity>
         <activity
             android:name=".MainActivity"

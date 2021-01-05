@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.CategoryActivity">
+    tools:context=".activities.ElementDetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -17,9 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/Theme.BudgetApp.PopupOverlay" />
-
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,22 +30,39 @@
         android:paddingBottom="20sp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
-            android:id="@+id/fragmentContainer"
+        <TableLayout
+            android:id="@+id/summaryTable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <TableRow
+                android:id="@+id/differenceRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/in_all"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#CE6B0F"
+                    android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+
+
+                <TextView
+                    android:id="@+id/differenceValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="TextView"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#CE6B0F"
+                    android:textSize="18sp"
+                    android:textStyle="bold"></TextView>
+
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:contentDescription="@string/fab_element"
-        app:backgroundTint="#E27D1E"
-        app:rippleColor="#E27D1E"
-        app:srcCompat="@drawable/ic_baseline_add_24"
-        app:tint="@color/white" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
