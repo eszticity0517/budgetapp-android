@@ -6,20 +6,17 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.budgetapp.CategoriesFragment
 import com.example.budgetapp.MainActivity
-import com.example.budgetapp.NoCategoriesFragment
 import com.example.budgetapp.R
 import com.example.budgetapp.fragment.ElementsFragment
 import com.example.budgetapp.fragment.NoElementsFragment
 import com.example.budgetapp.persistence.BudgetAppDatabase
-import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.entities.Element
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 
 
 class CategoryActivity : AppCompatActivity() {
@@ -48,7 +45,10 @@ class CategoryActivity : AppCompatActivity() {
 
             if (!categoryId.toString().isNullOrEmpty())
             {
-                var elements = MainActivity.GetAllElementsByCategory(categoryId = categoryId, mContext = this).execute()?.get()
+                var elements = MainActivity.GetAllElementsByCategory(
+                    categoryId = categoryId,
+                    mContext = this
+                ).execute()?.get()
 
                 elements?.forEach { element ->
                     print(element?.originalPriceProductName)
@@ -70,14 +70,19 @@ class CategoryActivity : AppCompatActivity() {
 
                     for(element in elements)
                     {
-                        var elements = MainActivity.GetAllElementsByCategory(categoryId = categoryId, mContext = this).execute()?.get()
+                        var elements = MainActivity.GetAllElementsByCategory(
+                            categoryId = categoryId,
+                            mContext = this
+                        ).execute()?.get()
 
                         elements?.forEach { element ->
                             print(element?.originalPriceProductName)
                         }
 
                         // The amount of saved money.
-                        elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(element!!.lowerPrice!!)
+                        elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(
+                            element!!.lowerPrice!!
+                        )
                     }
 
                     val bundle = Bundle()
@@ -106,9 +111,26 @@ class CategoryActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actions, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+
+        if (id == R.id.editButton) {
+            // do something here
+        }
+
+        if (id == R.id.deleteButton) {
+            // do something here
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun createNewElementDialog()
     {
-
         val originalPriceProductNameText = EditText(this)
         originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
         originalPriceProductNameText.hint = "Original product name"
@@ -126,7 +148,10 @@ class CategoryActivity : AppCompatActivity() {
         lowerPriceProductPriceText.hint = "Cheaper product price"
 
         val linearLayout = LinearLayout(this)
-        linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         linearLayout.orientation = LinearLayout.VERTICAL
 
         linearLayout.addView(originalPriceProductNameText)
@@ -139,7 +164,7 @@ class CategoryActivity : AppCompatActivity() {
                 .setTitle("New element")
                 .setView(linearLayout)
                 .setPositiveButton(
-                        android.R.string.ok, null
+                    android.R.string.ok, null
                 )
                 .setNegativeButton(android.R.string.cancel, null)
 
@@ -177,7 +202,7 @@ class CategoryActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    SaveElement(this, 1, 1, "lel", "lelt", this.categoryId ).execute()
+                    SaveElement(this, 1, 1, "lel", "lelt", this.categoryId).execute()
                     dialog.dismiss()
                 }
             }
@@ -208,7 +233,14 @@ class CategoryActivity : AppCompatActivity() {
     /**
      * Inserts a very new element in the database.
      */
-    class SaveElement(mContext: Context, lowerPrice: Int, originalPrice: Int, lowerPriceProductName: String, originalPriceProductName: String, categoryId: Long?): AsyncTask<String, Long, Element?>() {
+    class SaveElement(
+        mContext: Context,
+        lowerPrice: Int,
+        originalPrice: Int,
+        lowerPriceProductName: String,
+        originalPriceProductName: String,
+        categoryId: Long?
+    ): AsyncTask<String, Long, Element?>() {
         private var context: Context = mContext
         private var lowerPriceProductName = lowerPriceProductName
         private var originalPriceProductName = originalPriceProductName
@@ -222,11 +254,11 @@ class CategoryActivity : AppCompatActivity() {
                 val budgetAppDatabase = BudgetAppDatabase(context)
 
                 var element = Element(
-                        lowerPrice = lowerPrice,
-                        originalPrice = originalPrice,
-                        lowerPriceProductName = lowerPriceProductName,
-                        originalPriceProductName = originalPriceProductName,
-                        categoryId = categoryId
+                    lowerPrice = lowerPrice,
+                    originalPrice = originalPrice,
+                    lowerPriceProductName = lowerPriceProductName,
+                    originalPriceProductName = originalPriceProductName,
+                    categoryId = categoryId
                 )
                 budgetAppDatabase.ElementDao().save(element)
                 budgetAppDatabase.close()
