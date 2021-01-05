@@ -2,6 +2,7 @@ package com.example.budgetapp.activities
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
@@ -15,6 +16,7 @@ import com.example.budgetapp.R
 import com.example.budgetapp.fragment.ElementsFragment
 import com.example.budgetapp.fragment.NoElementsFragment
 import com.example.budgetapp.persistence.BudgetAppDatabase
+import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.entities.Element
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -120,13 +122,76 @@ class CategoryActivity : AppCompatActivity() {
         val id: Int = item.itemId
 
         if (id == R.id.editButton) {
-            // do something here
+            CreateEditCategoryDialog()
         }
 
         if (id == R.id.deleteButton) {
-            // do something here
+            CreateDeleteCategoryDialog()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun CreateDeleteCategoryDialog()
+    {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Delete category")
+            .setMessage("Are you sure?")
+            .setPositiveButton(
+                android.R.string.ok, null
+            )
+            .setNegativeButton(android.R.string.cancel, null)
+
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val affectedRows = DeleteCategory(this, categoryId).execute().get()
+
+            if (affectedRows > 0)
+            {
+                dialog.dismiss()
+
+                // Go back to summary page.
+                val intent = Intent(this@CategoryActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun CreateEditCategoryDialog()
+    {
+        // TODO: put it in a container for better margins / paddings.
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Rename category")
+            .setView(input)
+            .setPositiveButton(
+                android.R.string.ok, null
+            )
+            .setNegativeButton(android.R.string.cancel, null)
+
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val text = input.text.toString()
+
+            when {
+                text.isNullOrEmpty() -> {
+                    input?.error = getString(R.string.name_is_mandatory)
+                }
+                MainActivity.GetAllCategories(this).execute().get().any { it?.name == text && it?.id != categoryId} -> {
+                    input?.error = getString(R.string.name_is_reserved)
+                }
+                else -> {
+                    UpdateCategoryName(this, text, categoryId).execute()
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
     private fun createNewElementDialog()
@@ -291,6 +356,54 @@ class CategoryActivity : AppCompatActivity() {
                 categoryId
             } catch (e: Exception) {
                 Log.e("", "Error occurred while tried to get elements by category ID.", e)
+                null
+            }
+        }
+    }
+
+    /**
+     * Inserts a very new category in the database.
+     */
+    class UpdateCategoryName(mContext: Context, categoryName: String, categoryId: Long?): AsyncTask<String, Long, Category?>() {
+        private var context: Context = mContext
+        private var categoryName = categoryName
+        private var categoryId = categoryId
+
+        override fun doInBackground(json: Array<String?>?): Category? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                var category = budgetAppDatabase.CategoryDao().findById(categoryId)
+                category?.name = categoryName
+                budgetAppDatabase.CategoryDao().update(category)
+                budgetAppDatabase.close()
+                category
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to save category.", e)
+                null
+            }
+        }
+    }
+
+    /**
+     * Deletes category from the database.
+     */
+    class DeleteCategory(mContext: Context, categoryId: Long?): AsyncTask<String, Long, Int>() {
+        private var context: Context = mContext
+        private var categoryId = categoryId
+
+        override fun doInBackground(json: Array<String?>?): Int? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                // Deleting related elements first.
+                 budgetAppDatabase.ElementDao().deleteAllByCategoryId(categoryId)
+
+                // .. then deleting the actual category.
+                val categoryDeletion = budgetAppDatabase.CategoryDao().deleteById(categoryId)
+                categoryDeletion
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to delete category.", e)
                 null
             }
         }
