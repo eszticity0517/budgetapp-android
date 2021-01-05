@@ -267,7 +267,7 @@ class CategoryActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    SaveElement(this, 1, 1, "lel", "lelt", this.categoryId).execute()
+                    SaveElement(this, 1, 1, lowerPriceProductName, originalPriceProductName, this.categoryId).execute()
                     dialog.dismiss()
                 }
             }
