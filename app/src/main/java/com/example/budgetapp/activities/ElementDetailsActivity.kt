@@ -101,7 +101,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         }
 
         if (id == R.id.deleteButton) {
-            // CreateDeleteElementDialog()
+            CreateDeleteElementDialog()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -189,6 +189,53 @@ class ElementDetailsActivity : AppCompatActivity() {
                     ).execute()
                     dialog.dismiss()
                 }
+            }
+        }
+    }
+
+    private fun CreateDeleteElementDialog()
+    {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Delete element")
+            .setMessage("Are you sure?")
+            .setPositiveButton(
+                android.R.string.ok, null
+            )
+            .setNegativeButton(android.R.string.cancel, null)
+
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val affectedRows = DeleteElement(this, elementId).execute().get()
+
+            if (affectedRows > 0)
+            {
+                dialog.dismiss()
+
+                // Go back to summary page.
+                val intent = Intent(this@ElementDetailsActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    /**
+     * Deletes category from the database.
+     */
+    class DeleteElement(mContext: Context, elementId: Long?): AsyncTask<String, Long, Int>() {
+        private var context: Context = mContext
+        private var elementId = elementId
+
+        override fun doInBackground(json: Array<String?>?): Int? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                val elementDeletion = budgetAppDatabase.ElementDao().deleteById(elementId)
+                elementDeletion
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to delete category.", e)
+                null
             }
         }
     }
