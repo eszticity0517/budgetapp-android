@@ -2,16 +2,16 @@ package com.example.budgetapp.activities
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.budgetapp.CategoriesFragment
 import com.example.budgetapp.MainActivity
-import com.example.budgetapp.NoCategoriesFragment
 import com.example.budgetapp.R
 import com.example.budgetapp.fragment.ElementsFragment
 import com.example.budgetapp.fragment.NoElementsFragment
@@ -19,7 +19,6 @@ import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.entities.Element
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 
 
 class CategoryActivity : AppCompatActivity() {
@@ -48,7 +47,10 @@ class CategoryActivity : AppCompatActivity() {
 
             if (!categoryId.toString().isNullOrEmpty())
             {
-                var elements = MainActivity.GetAllElementsByCategory(categoryId = categoryId, mContext = this).execute()?.get()
+                var elements = MainActivity.GetAllElementsByCategory(
+                    categoryId = categoryId,
+                    mContext = this
+                ).execute()?.get()
 
                 elements?.forEach { element ->
                     print(element?.originalPriceProductName)
@@ -70,14 +72,19 @@ class CategoryActivity : AppCompatActivity() {
 
                     for(element in elements)
                     {
-                        var elements = MainActivity.GetAllElementsByCategory(categoryId = categoryId, mContext = this).execute()?.get()
+                        var elements = MainActivity.GetAllElementsByCategory(
+                            categoryId = categoryId,
+                            mContext = this
+                        ).execute()?.get()
 
                         elements?.forEach { element ->
                             print(element?.originalPriceProductName)
                         }
 
                         // The amount of saved money.
-                        elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(element!!.lowerPrice!!)
+                        elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(
+                            element!!.lowerPrice!!
+                        )
                     }
 
                     val bundle = Bundle()
@@ -106,9 +113,89 @@ class CategoryActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actions, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+
+        if (id == R.id.editButton) {
+            CreateEditCategoryDialog()
+        }
+
+        if (id == R.id.deleteButton) {
+            CreateDeleteCategoryDialog()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun CreateDeleteCategoryDialog()
+    {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Delete category")
+            .setMessage("Are you sure?")
+            .setPositiveButton(
+                android.R.string.ok, null
+            )
+            .setNegativeButton(android.R.string.cancel, null)
+
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val affectedRows = DeleteCategory(this, categoryId).execute().get()
+
+            if (affectedRows > 0)
+            {
+                dialog.dismiss()
+
+                // Go back to summary page.
+                val intent = Intent(this@CategoryActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    private fun CreateEditCategoryDialog()
+    {
+        // TODO: put it in a container for better margins / paddings.
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Rename category")
+            .setView(input)
+            .setPositiveButton(
+                android.R.string.ok, null
+            )
+            .setNegativeButton(android.R.string.cancel, null)
+
+        val dialog =builder.show()
+
+        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener {
+            val text = input.text.toString()
+
+            when {
+                text.isNullOrEmpty() -> {
+                    input?.error = getString(R.string.name_is_mandatory)
+                }
+                MainActivity.GetAllCategories(this).execute().get().any { it?.name == text && it?.id != categoryId} -> {
+                    input?.error = getString(R.string.name_is_reserved)
+                }
+                else -> {
+                    UpdateCategoryName(this, text, categoryId).execute()
+                    dialog.dismiss()
+                }
+            }
+        }
+    }
+
     private fun createNewElementDialog()
     {
-
         val originalPriceProductNameText = EditText(this)
         originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
         originalPriceProductNameText.hint = "Original product name"
@@ -126,7 +213,10 @@ class CategoryActivity : AppCompatActivity() {
         lowerPriceProductPriceText.hint = "Cheaper product price"
 
         val linearLayout = LinearLayout(this)
-        linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         linearLayout.orientation = LinearLayout.VERTICAL
 
         linearLayout.addView(originalPriceProductNameText)
@@ -139,7 +229,7 @@ class CategoryActivity : AppCompatActivity() {
                 .setTitle("New element")
                 .setView(linearLayout)
                 .setPositiveButton(
-                        android.R.string.ok, null
+                    android.R.string.ok, null
                 )
                 .setNegativeButton(android.R.string.cancel, null)
 
@@ -177,7 +267,7 @@ class CategoryActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    SaveElement(this, 1, 1, "lel", "lelt", this.categoryId ).execute()
+                    SaveElement(this, 1, 1, "lel", "lelt", this.categoryId).execute()
                     dialog.dismiss()
                 }
             }
@@ -208,7 +298,14 @@ class CategoryActivity : AppCompatActivity() {
     /**
      * Inserts a very new element in the database.
      */
-    class SaveElement(mContext: Context, lowerPrice: Int, originalPrice: Int, lowerPriceProductName: String, originalPriceProductName: String, categoryId: Long?): AsyncTask<String, Long, Element?>() {
+    class SaveElement(
+        mContext: Context,
+        lowerPrice: Int,
+        originalPrice: Int,
+        lowerPriceProductName: String,
+        originalPriceProductName: String,
+        categoryId: Long?
+    ): AsyncTask<String, Long, Element?>() {
         private var context: Context = mContext
         private var lowerPriceProductName = lowerPriceProductName
         private var originalPriceProductName = originalPriceProductName
@@ -222,11 +319,11 @@ class CategoryActivity : AppCompatActivity() {
                 val budgetAppDatabase = BudgetAppDatabase(context)
 
                 var element = Element(
-                        lowerPrice = lowerPrice,
-                        originalPrice = originalPrice,
-                        lowerPriceProductName = lowerPriceProductName,
-                        originalPriceProductName = originalPriceProductName,
-                        categoryId = categoryId
+                    lowerPrice = lowerPrice,
+                    originalPrice = originalPrice,
+                    lowerPriceProductName = lowerPriceProductName,
+                    originalPriceProductName = originalPriceProductName,
+                    categoryId = categoryId
                 )
                 budgetAppDatabase.ElementDao().save(element)
                 budgetAppDatabase.close()
@@ -259,6 +356,54 @@ class CategoryActivity : AppCompatActivity() {
                 categoryId
             } catch (e: Exception) {
                 Log.e("", "Error occurred while tried to get elements by category ID.", e)
+                null
+            }
+        }
+    }
+
+    /**
+     * Inserts a very new category in the database.
+     */
+    class UpdateCategoryName(mContext: Context, categoryName: String, categoryId: Long?): AsyncTask<String, Long, Category?>() {
+        private var context: Context = mContext
+        private var categoryName = categoryName
+        private var categoryId = categoryId
+
+        override fun doInBackground(json: Array<String?>?): Category? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                var category = budgetAppDatabase.CategoryDao().findById(categoryId)
+                category?.name = categoryName
+                budgetAppDatabase.CategoryDao().update(category)
+                budgetAppDatabase.close()
+                category
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to save category.", e)
+                null
+            }
+        }
+    }
+
+    /**
+     * Deletes category from the database.
+     */
+    class DeleteCategory(mContext: Context, categoryId: Long?): AsyncTask<String, Long, Int>() {
+        private var context: Context = mContext
+        private var categoryId = categoryId
+
+        override fun doInBackground(json: Array<String?>?): Int? {
+            return try {
+                val budgetAppDatabase = BudgetAppDatabase(context)
+
+                // Deleting related elements first.
+                 budgetAppDatabase.ElementDao().deleteAllByCategoryId(categoryId)
+
+                // .. then deleting the actual category.
+                val categoryDeletion = budgetAppDatabase.CategoryDao().deleteById(categoryId)
+                categoryDeletion
+            } catch (e: Exception) {
+                Log.e("", "Error occurred while tried to delete category.", e)
                 null
             }
         }

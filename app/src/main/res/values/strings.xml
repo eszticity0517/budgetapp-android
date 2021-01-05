@@ -4,6 +4,7 @@
     <!-- Activity titles -->
     <string name="title_activity_main">Summary</string>
     <string name="title_activity_category">CategoryActivity</string>
+    <string name="title_activity_element_details">ElementDetailsActivity</string>
 
     <!-- Opening page texts -->
     <string name="question_title">What brand of food, household product, clothing you come up with the most economically?</string>
@@ -37,10 +38,4 @@
     <!-- icon button titles -->
     <string name="fab_category">Icon button for creating new category.</string>
     <string name="fab_element">Icon button for creating new element.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_element_details">ElementDetailsActivity</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

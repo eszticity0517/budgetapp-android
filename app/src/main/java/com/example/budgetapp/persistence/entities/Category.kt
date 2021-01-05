@@ -14,5 +14,5 @@ data class Category (
 
     @Expose
     @NonNull
-    val name: String? = null
+    var name: String? = null
 )
