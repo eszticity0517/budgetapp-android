@@ -4,12 +4,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.ABORT
 import androidx.room.Query
+import androidx.room.Update
+import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.entities.Element
 
 @Dao
 interface ElementDao {
     @Insert(onConflict = ABORT)
     fun save(element: Element?): Long
+
+    @Update
+    fun update(element: Element?)
 
     @Query("SELECT * FROM elements WHERE lowerPriceProductName = :name")
     fun findByLowerPriceProductName(name: String?): Element?
