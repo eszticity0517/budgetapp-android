@@ -6,7 +6,10 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.*
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Category
@@ -75,10 +78,18 @@ class MainActivity : AppCompatActivity() {
         // TODO: put it in a container for better margins / paddings.
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
+        input.setSingleLine()
+
+        val container = FrameLayout(this)
+        val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.leftMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
+        params.rightMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
+        input.layoutParams = params
+        container.addView(input);
 
         val builder = AlertDialog.Builder(this)
                 .setTitle("New category")
-                .setView(input)
+                .setView(container)
                 .setPositiveButton(
                         android.R.string.ok, null
                 )
