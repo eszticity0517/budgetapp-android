@@ -263,7 +263,6 @@ class CategoryActivity : AppCompatActivity() {
         linearLayout.addView(container3)
         linearLayout.addView(container4)
 
-        // TODO: put it in a container for better margins / paddings.
         val builder = AlertDialog.Builder(this)
                 .setTitle("New element")
                 .setView(linearLayout)

@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun createNewCategoryDialog()
     {
-        // TODO: put it in a container for better margins / paddings.
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
         input.setSingleLine()
