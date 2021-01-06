@@ -164,13 +164,20 @@ class CategoryActivity : AppCompatActivity() {
 
     private fun CreateEditCategoryDialog()
     {
-        // TODO: put it in a container for better margins / paddings.
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
+        input.setSingleLine()
+
+        val container = FrameLayout(this)
+        val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.leftMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
+        params.rightMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
+        input.layoutParams = params
+        container.addView(input);
 
         val builder = AlertDialog.Builder(this)
             .setTitle("Rename category")
-            .setView(input)
+            .setView(container)
             .setPositiveButton(
                 android.R.string.ok, null
             )
