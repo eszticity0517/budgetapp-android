@@ -9,6 +9,7 @@ import android.text.InputType
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.MainActivity
@@ -198,21 +199,50 @@ class CategoryActivity : AppCompatActivity() {
 
     private fun createNewElementDialog()
     {
+
+        val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.leftMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
+        params.rightMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
+
+        val container1 = FrameLayout(this)
+
         val originalPriceProductNameText = EditText(this)
         originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
         originalPriceProductNameText.hint = "Original product name"
+        originalPriceProductNameText.setSingleLine()
+
+        originalPriceProductNameText.layoutParams = params
+        container1.addView(originalPriceProductNameText);
+
+        val container2 = FrameLayout(this)
 
         val originalPriceProductPriceText = EditText(this)
         originalPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
         originalPriceProductPriceText.hint = "Original product price"
+        originalPriceProductPriceText.setSingleLine()
+
+        originalPriceProductPriceText.layoutParams = params
+        container2.addView(originalPriceProductPriceText);
+
+        val container3 = FrameLayout(this)
 
         val lowerPriceProductNameText = EditText(this)
         lowerPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
         lowerPriceProductNameText.hint = "Cheaper product name"
+        lowerPriceProductNameText.setSingleLine()
+
+        lowerPriceProductNameText.layoutParams = params
+        container3.addView(lowerPriceProductNameText);
+
+        val container4 = FrameLayout(this)
 
         val lowerPriceProductPriceText = EditText(this)
         lowerPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
         lowerPriceProductPriceText.hint = "Cheaper product price"
+        lowerPriceProductPriceText.setSingleLine()
+
+        lowerPriceProductPriceText.layoutParams = params
+        container4.addView(lowerPriceProductPriceText);
 
         val linearLayout = LinearLayout(this)
         linearLayout.layoutParams = LinearLayout.LayoutParams(
@@ -221,10 +251,10 @@ class CategoryActivity : AppCompatActivity() {
         )
         linearLayout.orientation = LinearLayout.VERTICAL
 
-        linearLayout.addView(originalPriceProductNameText)
-        linearLayout.addView(originalPriceProductPriceText)
-        linearLayout.addView(lowerPriceProductNameText)
-        linearLayout.addView(lowerPriceProductPriceText)
+        linearLayout.addView(container1)
+        linearLayout.addView(container2)
+        linearLayout.addView(container3)
+        linearLayout.addView(container4)
 
         // TODO: put it in a container for better margins / paddings.
         val builder = AlertDialog.Builder(this)
