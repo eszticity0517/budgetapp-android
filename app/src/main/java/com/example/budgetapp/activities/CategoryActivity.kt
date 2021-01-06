@@ -30,8 +30,9 @@ class CategoryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_category)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        // This parent activity of ElementDetailsActivity can acquire data back by having "android:launchMode="singleTask" in the config.
         val intent = intent
-        val categoryName  = intent?.getStringExtra("categoryName") as String
+        val categoryName  = intent.getStringExtra("categoryName") as String
 
         actionBar?.title = categoryName
         supportActionBar?.title = categoryName
@@ -155,6 +156,7 @@ class CategoryActivity : AppCompatActivity() {
                 // Go back to summary page.
                 val intent = Intent(this@CategoryActivity, MainActivity::class.java)
                 startActivity(intent)
+                finish()
             }
         }
     }

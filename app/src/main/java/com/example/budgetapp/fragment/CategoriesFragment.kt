@@ -71,6 +71,7 @@ class CategoriesFragment : Fragment() {
                 intent?.putExtra("categoryName", category?.key)
 
                 startActivity(intent)
+                this.activity?.finish()
             }
 
             summaryTable.addView(tableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))

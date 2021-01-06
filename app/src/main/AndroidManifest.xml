@@ -23,6 +23,7 @@
         <activity
             android:name=".activities.CategoryActivity"
             android:label="@string/title_activity_category"
+            android:launchMode="singleTask"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BudgetApp.NoActionBar">
@@ -33,6 +34,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BudgetApp.NoActionBar" />
         <activity
