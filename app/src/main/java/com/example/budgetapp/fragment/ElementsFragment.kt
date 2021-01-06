@@ -10,7 +10,6 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import com.example.budgetapp.R
-import com.example.budgetapp.activities.CategoryActivity
 import com.example.budgetapp.activities.ElementDetailsActivity
 
 /**

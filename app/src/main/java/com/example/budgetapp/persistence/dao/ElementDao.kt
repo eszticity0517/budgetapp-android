@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.ABORT
 import androidx.room.Query
 import androidx.room.Update
-import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.entities.Element
 
 @Dao
