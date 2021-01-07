@@ -96,6 +96,29 @@ class GetCategoryNameById(mContext: Context, categoryId: Long?):  AsyncTask<Stri
 }
 
 /**
+ * Gets the category object by id.
+ */
+class GetCategoryById(mContext: Context, categoryId: Long?):  AsyncTask<String, Long, Category?>() {
+    private var context: Context = mContext
+    private var categoryId: Long? = categoryId
+
+    override fun doInBackground(json: Array<String?>?): Category? {
+        var category: Category?
+
+        return try {
+            val budgetAppDatabase = BudgetAppDatabase(context)
+
+            category = budgetAppDatabase.CategoryDao().findById(categoryId)
+            budgetAppDatabase.close()
+            category
+        } catch (e: Exception) {
+            Log.e("", "Error occurred while tried to get category by id.", e)
+            null
+        }
+    }
+}
+
+/**
  * Updates a category's name acquired by its id.
  */
 class UpdateCategoryName(mContext: Context, categoryName: String, categoryId: Long?): AsyncTask<String, Long, Category?>() {

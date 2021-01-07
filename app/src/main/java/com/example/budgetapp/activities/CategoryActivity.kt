@@ -13,6 +13,7 @@ import com.example.budgetapp.MainActivity
 import com.example.budgetapp.R
 import com.example.budgetapp.fragment.ElementsFragment
 import com.example.budgetapp.fragment.NoElementsFragment
+import com.example.budgetapp.persistence.entities.Category
 import com.example.budgetapp.persistence.tools.*
 import com.example.budgetapp.persistence.tools.roomtasks.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,7 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class CategoryActivity : AppCompatActivity() {
 
-    private var categoryId : Long? = null
+    private var category : Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +42,12 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            categoryId = GetCategoryIdByName(this, categoryName).execute().get()
+            category = GetCategoryById(this, GetCategoryIdByName(this, categoryName).execute().get()).execute().get()
 
-            if (!categoryId.toString().isNullOrEmpty())
+            if (!category?.id.toString().isNullOrEmpty())
             {
                 var elements = GetAllElementsByCategory(
-                    categoryId = categoryId,
+                    categoryId = category?.id,
                     mContext = this
                 ).execute()?.get()
 
@@ -71,7 +72,7 @@ class CategoryActivity : AppCompatActivity() {
                     for(element in elements)
                     {
                         var elements = GetAllElementsByCategory(
-                            categoryId = categoryId,
+                            categoryId = category?.id,
                             mContext = this
                         ).execute()?.get()
 
@@ -144,7 +145,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener {
-            val affectedRows = DeleteCategory(this, categoryId).execute().get()
+            val affectedRows = DeleteCategory(this, category?.id).execute().get()
 
             if (affectedRows > 0)
             {
@@ -169,6 +170,7 @@ class CategoryActivity : AppCompatActivity() {
         params.leftMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
         params.rightMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
         input.layoutParams = params
+        input.setText(category?.name)
         container.addView(input);
 
         val builder = AlertDialog.Builder(this)
@@ -189,11 +191,11 @@ class CategoryActivity : AppCompatActivity() {
                 text.isNullOrEmpty() -> {
                     input?.error = getString(R.string.name_is_mandatory)
                 }
-                GetAllCategories(this).execute().get().any { it?.name == text && it?.id != categoryId} -> {
+                GetAllCategories(this).execute().get().any { it?.name == text && it?.id != category?.id} -> {
                     input?.error = getString(R.string.name_is_reserved)
                 }
                 else -> {
-                    UpdateCategoryName(this, text, categoryId).execute()
+                    UpdateCategoryName(this, text, category?.id).execute()
                     dialog.dismiss()
                 }
             }
@@ -301,7 +303,7 @@ class CategoryActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    SaveElement(this, 1, 1, lowerPriceProductName, originalPriceProductName, this.categoryId).execute()
+                    SaveElement(this, 1, 1, lowerPriceProductName, originalPriceProductName, this.category?.id).execute()
                     dialog.dismiss()
                 }
             }

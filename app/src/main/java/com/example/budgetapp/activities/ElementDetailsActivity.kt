@@ -11,13 +11,13 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.MainActivity
 import com.example.budgetapp.R
+import com.example.budgetapp.persistence.entities.Element
 import com.example.budgetapp.persistence.tools.*
 import com.example.budgetapp.persistence.tools.roomtasks.*
 
 class ElementDetailsActivity : AppCompatActivity() {
 
-    private var elementId: Long? = null
-    private var elementCategoryId: Long? = null
+    private var element: Element? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +32,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val element = GetElementByName(this, categoryName).execute().get()
-        elementId = element?.id
-        elementCategoryId = element?.categoryId
+        element = GetElementByName(this, categoryName).execute().get()
 
         // Calculating difference between lower and higher price.
         var differenceCalculated = element?.originalPrice!!.minus(element?.lowerPrice!!)
@@ -53,11 +51,11 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         // Put original product data in table.
         val originalPriceProductNameText = TextView(this)
-        originalPriceProductNameText.text = element.originalPriceProductName
+        originalPriceProductNameText.text = element?.originalPriceProductName
         originalPriceProductNameText.layoutParams = params
 
         val originalPriceProductPriceText = TextView(this)
-        originalPriceProductPriceText.text = element.originalPrice.toString()
+        originalPriceProductPriceText.text = element?.originalPrice.toString()
         originalPriceProductPriceText.layoutParams = params
 
         val tableRow = TableRow(this)
@@ -69,11 +67,11 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         // Put cheaper product data in table.
         val lowerPriceProductNameText = TextView(this)
-        lowerPriceProductNameText.text = element.lowerPriceProductName
+        lowerPriceProductNameText.text = element?.lowerPriceProductName
         lowerPriceProductNameText.layoutParams = params
 
         val lowerPriceProductPriceText = TextView(this)
-        lowerPriceProductPriceText.text = element.lowerPrice.toString()
+        lowerPriceProductPriceText.text = element?.lowerPrice.toString()
         lowerPriceProductPriceText.layoutParams = params
 
         val tableRow2 = TableRow(this)
@@ -131,6 +129,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
         originalPriceProductNameText.hint = "Original product name"
         originalPriceProductNameText.setSingleLine()
+        originalPriceProductNameText.setText(element?.originalPriceProductName)
 
         originalPriceProductNameText.layoutParams = params
         container1.addView(originalPriceProductNameText);
@@ -141,6 +140,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         originalPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
         originalPriceProductPriceText.hint = "Original product price"
         originalPriceProductPriceText.setSingleLine()
+        originalPriceProductPriceText.setText(element?.originalPrice.toString())
 
         originalPriceProductPriceText.layoutParams = params
         container2.addView(originalPriceProductPriceText);
@@ -151,6 +151,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         lowerPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
         lowerPriceProductNameText.hint = "Cheaper product name"
         lowerPriceProductNameText.setSingleLine()
+        lowerPriceProductNameText.setText(element?.lowerPriceProductName)
 
         lowerPriceProductNameText.layoutParams = params
         container3.addView(lowerPriceProductNameText);
@@ -161,6 +162,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         lowerPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
         lowerPriceProductPriceText.hint = "Cheaper product price"
         lowerPriceProductPriceText.setSingleLine()
+        lowerPriceProductPriceText.setText(element?.lowerPrice.toString())
 
         lowerPriceProductPriceText.layoutParams = params
         container4.addView(lowerPriceProductPriceText);
@@ -210,11 +212,11 @@ class ElementDetailsActivity : AppCompatActivity() {
                     originalPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
                 }
 
-                GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName && it?.id != elementId} -> {
+                GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName && it?.id != element?.id} -> {
                     lowerPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
 
-                GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName && it?.id != elementId} -> {
+                GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName && it?.id != element?.id} -> {
                     originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
 
@@ -225,7 +227,7 @@ class ElementDetailsActivity : AppCompatActivity() {
                             originalPriceProductPrice.toInt(),
                             lowerPriceProductName,
                             originalPriceProductName,
-                            this.elementId
+                            element?.id
                     ).execute()
                     dialog.dismiss()
                 }
@@ -247,7 +249,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener {
-            val affectedRows = DeleteElement(this, elementId).execute().get()
+            val affectedRows = DeleteElement(this, element?.id).execute().get()
 
             if (affectedRows > 0)
             {
@@ -255,7 +257,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
                 // Go back to summary page.
                 val intent = Intent(this@ElementDetailsActivity, MainActivity::class.java)
-                intent.putExtra("categoryName", GetCategoryNameById(this, elementCategoryId).execute().get())
+                intent.putExtra("categoryName", GetCategoryNameById(this, element?.categoryId).execute().get())
                 startActivity(intent)
             }
         }
