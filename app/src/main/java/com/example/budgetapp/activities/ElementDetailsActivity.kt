@@ -197,40 +197,50 @@ class ElementDetailsActivity : AppCompatActivity() {
             val originalPriceProductName = originalPriceProductNameText.text.toString()
             val originalPriceProductPrice = originalPriceProductPriceText.text.toString()
 
-            when {
-                lowerPriceProductName.isNullOrEmpty() -> {
+            var isOneFieldEmpty = lowerPriceProductName.isNullOrEmpty() ||
+                    originalPriceProductName.isNullOrEmpty() ||
+                    lowerPriceProductPrice.isNullOrEmpty() ||
+                    originalPriceProductPrice.isNullOrEmpty()
+
+            if (isOneFieldEmpty) {
+                if (lowerPriceProductName.isNullOrEmpty()) {
                     lowerPriceProductNameText?.error = getString(R.string.name_is_mandatory)
                 }
-                originalPriceProductName.isNullOrEmpty() -> {
+
+                if (originalPriceProductName.isNullOrEmpty()) {
                     originalPriceProductNameText?.error = getString(R.string.name_is_mandatory)
                 }
 
-                lowerPriceProductPrice.isNullOrEmpty() -> {
+                if (lowerPriceProductPrice.isNullOrEmpty()) {
                     lowerPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
                 }
-                originalPriceProductPrice.isNullOrEmpty() -> {
-                    originalPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
-                }
 
-                GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName && it?.id != element?.id} -> {
+                if (GetAllElements(this).execute().get()
+                        .any { it?.lowerPriceProductName == lowerPriceProductName  && it?.id != element?.id }
+                ) {
                     lowerPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
 
-                GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName && it?.id != element?.id} -> {
-                    originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
+                if (originalPriceProductPrice.isNullOrEmpty()) {
+                    originalPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
                 }
 
-                else -> {
-                    UpdateElement(
-                            this,
-                            lowerPriceProductPrice.toInt(),
-                            originalPriceProductPrice.toInt(),
-                            lowerPriceProductName,
-                            originalPriceProductName,
-                            element?.id
-                    ).execute()
-                    dialog.dismiss()
+                if (GetAllElements(this).execute().get()
+                        .any { it?.originalPriceProductName == originalPriceProductName  && it?.id != element?.id}
+                ) {
+                    originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
+            }
+            else {
+                UpdateElement(
+                    this,
+                    lowerPriceProductPrice.toInt(),
+                    originalPriceProductPrice.toInt(),
+                    lowerPriceProductName,
+                    originalPriceProductName,
+                    element?.id
+                ).execute()
+                dialog.dismiss()
             }
         }
     }
