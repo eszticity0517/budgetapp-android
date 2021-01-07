@@ -75,7 +75,7 @@
 
             <Button
                 android:id="@+id/getStartedButton"
-                style="?android:attr/buttonStyleSmall"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:onClick="goToSummaryPage"
                 android:layout_height="wrap_content"
