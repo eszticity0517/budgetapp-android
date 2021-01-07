@@ -25,47 +25,52 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            val categories = GetAllCategories(this).execute().get()
+            getCategoriesAndShowFragment()
+        }
+    }
 
-            if(categories?.size == 0 || categories == null)
+    private fun getCategoriesAndShowFragment()
+    {
+        val categories = GetAllCategories(this).execute().get()
+
+        if(categories?.size == 0 || categories == null)
+        {
+            // If no category, then show a message for the user.
+            val noCategoryFragment = NoCategoriesFragment()
+            noCategoryFragment.arguments = intent.extras
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, noCategoryFragment, "noCategoryFragment")
+                .commit()
+        }
+        else {
+            // Put categories and money amount together in a map.
+            val categoriesAndValues = hashMapOf<String, Int>()
+
+            for(category in categories)
             {
-                // If no category, then show a message for the user.
-                val noCategoryFragment = NoCategoriesFragment()
-                noCategoryFragment.arguments = intent.extras
+                var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
 
-                supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainer, noCategoryFragment, "noCategoryFragment")
-                        .commit()
-            }
-            else {
-                // Put categories and money amount together in a map.
-                val categoriesAndValues = hashMapOf<String, Int>()
+                var savedAmount = 0
 
-                for(category in categories)
-                {
-                    var elements = GetAllElementsByCategory(categoryId = category?.id, mContext = this).execute()?.get()
-
-                    var savedAmount = 0
-
-                    elements?.forEach { element ->
-                      savedAmount += element?.originalPrice!!.minus(element?.lowerPrice!!)
-                    }
-
-                    categoriesAndValues[category?.name!!] = savedAmount
+                elements?.forEach { element ->
+                    savedAmount += element?.originalPrice!!.minus(element?.lowerPrice!!)
                 }
 
-                val bundle = Bundle()
-                bundle.putSerializable("categories", categoriesAndValues)
-
-                val categoriesFragment = CategoriesFragment()
-                categoriesFragment.arguments = bundle
-
-                supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainer, categoriesFragment, "categoriesFragment")
-                        .commit()
+                categoriesAndValues[category?.name!!] = savedAmount
             }
+
+            val bundle = Bundle()
+            bundle.putSerializable("categories", categoriesAndValues)
+
+            val categoriesFragment = CategoriesFragment()
+            categoriesFragment.arguments = bundle
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, categoriesFragment, "categoriesFragment")
+                .commit()
         }
     }
 
@@ -105,6 +110,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> {
                     SaveCategory(this, text).execute()
+                    // Showing changes.
+                    getCategoriesAndShowFragment()
                     dialog.dismiss()
                 }
             }
