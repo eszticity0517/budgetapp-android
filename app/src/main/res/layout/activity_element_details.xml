@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:divider="?android:attr/dividerHorizontal"
             android:showDividers="middle"
+            android:stretchColumns="0"
             android:layout_height="match_parent">
 
             <TableRow
