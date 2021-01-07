@@ -42,73 +42,78 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            category = GetCategoryById(this, GetCategoryIdByName(this, categoryName).execute().get()).execute().get()
+            getAllElementsAndShowFragment(categoryName)
+        }
+    }
 
-            if (!category?.id.toString().isNullOrEmpty())
-            {
-                var elements = GetAllElementsByCategory(
-                    categoryId = category?.id,
-                    mContext = this
-                ).execute()?.get()
+    private fun getAllElementsAndShowFragment(categoryName: String?)
+    {
+        category = GetCategoryById(this, GetCategoryIdByName(this, categoryName).execute().get()).execute().get()
 
-                elements?.forEach { element ->
-                    print(element?.originalPriceProductName)
-                }
+        if (!category?.id.toString().isNullOrEmpty())
+        {
+            var elements = GetAllElementsByCategory(
+                categoryId = category?.id,
+                mContext = this
+            ).execute()?.get()
 
-                if(elements?.size == 0 || elements == null)
-                {
-                    // If no elements for the category, then show a message for the user.
-                    val noElements = NoElementsFragment()
-                    noElements.arguments = intent.extras
-
-                    supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.fragmentContainer, noElements, "noElementsFragment")
-                            .commit()
-                }
-                else {
-                    val elementsAndValues = hashMapOf<String, Int>()
-
-                    for(element in elements)
-                    {
-                        var elements = GetAllElementsByCategory(
-                            categoryId = category?.id,
-                            mContext = this
-                        ).execute()?.get()
-
-                        elements?.forEach { element ->
-                            print(element?.originalPriceProductName)
-                        }
-
-                        // The amount of saved money.
-                        elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(
-                            element!!.lowerPrice!!
-                        )
-                    }
-
-                    val bundle = Bundle()
-                    bundle.putSerializable("elements", elementsAndValues)
-
-                    val elementsFragment = ElementsFragment()
-                    elementsFragment.arguments = bundle
-
-                    supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.fragmentContainer, elementsFragment, "elementsFragment")
-                            .commit()
-                }
+            elements?.forEach { element ->
+                print(element?.originalPriceProductName)
             }
-            else
+
+            if(elements?.size == 0 || elements == null)
             {
                 // If no elements for the category, then show a message for the user.
                 val noElements = NoElementsFragment()
                 noElements.arguments = intent.extras
 
                 supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainer, noElements, "noElementsFragment")
-                        .commit()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, noElements, "noElementsFragment")
+                    .commit()
             }
+            else {
+                val elementsAndValues = hashMapOf<String, Int>()
+
+                for(element in elements)
+                {
+                    var elements = GetAllElementsByCategory(
+                        categoryId = category?.id,
+                        mContext = this
+                    ).execute()?.get()
+
+                    elements?.forEach { element ->
+                        print(element?.originalPriceProductName)
+                    }
+
+                    // The amount of saved money.
+                    elementsAndValues[element?.lowerPriceProductName!!] = element.originalPrice!!.minus(
+                        element!!.lowerPrice!!
+                    )
+                }
+
+                val bundle = Bundle()
+                bundle.putSerializable("elements", elementsAndValues)
+
+                val elementsFragment = ElementsFragment()
+                elementsFragment.arguments = bundle
+
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, elementsFragment, "elementsFragment")
+                    .commit()
+            }
+        }
+        else
+        {
+            // If no elements for the category, then show a message for the user.
+            val noElements = NoElementsFragment()
+            noElements.arguments = intent.extras
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, noElements, "noElementsFragment")
+                .commit()
         }
     }
 
@@ -121,17 +126,17 @@ class CategoryActivity : AppCompatActivity() {
         val id: Int = item.itemId
 
         if (id == R.id.editButton) {
-            CreateEditCategoryDialog()
+            createEditCategoryDialog()
         }
 
         if (id == R.id.deleteButton) {
-            CreateDeleteCategoryDialog()
+            createDeleteCategoryDialog()
         }
         return super.onOptionsItemSelected(item)
     }
 
 
-    private fun CreateDeleteCategoryDialog()
+    private fun createDeleteCategoryDialog()
     {
         val builder = AlertDialog.Builder(this)
             .setTitle("Delete category")
@@ -159,7 +164,7 @@ class CategoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun CreateEditCategoryDialog()
+    private fun createEditCategoryDialog()
     {
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
@@ -196,6 +201,15 @@ class CategoryActivity : AppCompatActivity() {
                 }
                 else -> {
                     UpdateCategoryName(this, text, category?.id).execute()
+
+                    // Since categoryName comes from intent, new activity is opened here.
+                    val intent = Intent(this@CategoryActivity, CategoryActivity::class.java)
+                    intent.putExtra("categoryName", text)
+                    startActivity(intent)
+                    finish()
+
+                    // getAllElementsAndShowFragment(category?.name)
+
                     dialog.dismiss()
                 }
             }
@@ -315,6 +329,10 @@ class CategoryActivity : AppCompatActivity() {
             }
             else {
                 SaveElement(this, 1, 1, lowerPriceProductName, originalPriceProductName, this.category?.id).execute()
+
+                // Showing changes.
+                getAllElementsAndShowFragment(category?.name)
+
                 dialog.dismiss()
             }
         }
