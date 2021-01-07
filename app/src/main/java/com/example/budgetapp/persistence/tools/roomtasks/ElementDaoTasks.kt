@@ -7,7 +7,7 @@ import com.example.budgetapp.persistence.BudgetAppDatabase
 import com.example.budgetapp.persistence.entities.Element
 
 /**
- * Gets all existing elements related to a specific category spotted by its ID.
+ * Gets all existing elements related to a specific category.
  */
 class GetAllElementsByCategory(mContext: Context, categoryId: Long?):  AsyncTask<String, Long, List<Element?>?>() {
     private var context: Context = mContext
@@ -92,7 +92,7 @@ class SaveElement(
 }
 
 /**
- * Deletes category from the database.
+ * Deletes an element from the database.
  */
 class DeleteElement(mContext: Context, elementId: Long?): AsyncTask<String, Long, Int>() {
     private var context: Context = mContext
@@ -105,14 +105,14 @@ class DeleteElement(mContext: Context, elementId: Long?): AsyncTask<String, Long
             val elementDeletion = budgetAppDatabase.ElementDao().deleteById(elementId)
             elementDeletion
         } catch (e: Exception) {
-            Log.e("", "Error occurred while tried to delete category.", e)
+            Log.e("", "Error occurred while tried to delete element.", e)
             null
         }
     }
 }
 
 /**
- * Inserts a very new category in the database.
+ * Updates an element in the database with many properties.
  */
 class UpdateElement(
     mContext: Context,
@@ -135,6 +135,7 @@ class UpdateElement(
             val budgetAppDatabase = BudgetAppDatabase(context)
 
             var element = budgetAppDatabase.ElementDao().findById(elementId)
+
             element?.lowerPrice = lowerPrice
             element?.lowerPriceProductName = lowerPriceProductName
             element?.originalPrice = originalPrice
@@ -144,7 +145,7 @@ class UpdateElement(
             budgetAppDatabase.close()
             element
         } catch (e: Exception) {
-            Log.e("", "Error occurred while tried to save category.", e)
+            Log.e("", "Error occurred while tried to update element.", e)
             null
         }
     }
@@ -168,7 +169,7 @@ class GetElementByName(mContext: Context, elementName: String): AsyncTask<String
             budgetAppDatabase.close()
             element
         } catch (e: Exception) {
-            Log.e("", "Error occurred while tried to get element.", e)
+            Log.e("", "Error occurred while tried to get element by its name.", e)
             null
         }
     }

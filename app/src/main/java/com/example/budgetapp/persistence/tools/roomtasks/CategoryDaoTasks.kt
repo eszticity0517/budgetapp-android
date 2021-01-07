@@ -51,7 +51,7 @@ class GetAllCategories(mContext: Context): AsyncTask<String, Long, List<Category
 }
 
 /**
- * Gets all existing elements related to a specific category spotted by its ID.
+ * Gets the category id by its name.
  */
 class GetCategoryIdByName(mContext: Context, categoryName: String?):  AsyncTask<String, Long, Long?>() {
     private var context: Context = mContext
@@ -67,14 +67,13 @@ class GetCategoryIdByName(mContext: Context, categoryName: String?):  AsyncTask<
             budgetAppDatabase.close()
             categoryId
         } catch (e: Exception) {
-            Log.e("", "Error occurred while tried to get elements by category ID.", e)
+            Log.e("", "Error occurred while tried to get category by ID.", e)
             null
         }
     }
 }
-
 /**
- * Gets all existing elements related to a specific category spotted by its ID.
+ * Gets the category name by its id.
  */
 class GetCategoryNameById(mContext: Context, categoryId: Long?):  AsyncTask<String, Long, String?>() {
     private var context: Context = mContext
@@ -90,14 +89,14 @@ class GetCategoryNameById(mContext: Context, categoryId: Long?):  AsyncTask<Stri
             budgetAppDatabase.close()
             categoryName
         } catch (e: Exception) {
-            Log.e("", "Error occurred while tried to get category.", e)
+            Log.e("", "Error occurred while tried to get category by name.", e)
             null
         }
     }
 }
 
 /**
- * Inserts a very new category in the database.
+ * Updates a category's name acquired by its id.
  */
 class UpdateCategoryName(mContext: Context, categoryName: String, categoryId: Long?): AsyncTask<String, Long, Category?>() {
     private var context: Context = mContext
@@ -114,7 +113,7 @@ class UpdateCategoryName(mContext: Context, categoryName: String, categoryId: Lo
             budgetAppDatabase.close()
             category
         } catch (e: Exception) {
-            Log.e("", "Error occurred while tried to save category.", e)
+            Log.e("", "Error occurred while tried to update category with a new name.", e)
             null
         }
     }
