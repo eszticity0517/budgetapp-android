@@ -328,7 +328,7 @@ class CategoryActivity : AppCompatActivity() {
                 }
             }
             else {
-                SaveElement(this, 1, 1, lowerPriceProductName, originalPriceProductName, this.category?.id).execute()
+                SaveElement(this, lowerPriceProductPrice.toInt(), originalPriceProductPrice.toInt(), lowerPriceProductName, originalPriceProductName, this.category?.id).execute()
 
                 // Showing changes.
                 getAllElementsAndShowFragment(category?.name)
