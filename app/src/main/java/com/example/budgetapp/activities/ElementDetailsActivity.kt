@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -58,6 +59,19 @@ class ElementDetailsActivity : AppCompatActivity() {
         originalPriceProductPriceText.text = element?.originalPrice.toString()
         originalPriceProductPriceText.layoutParams = params
 
+        // Summary row has the same font size.
+        originalPriceProductPriceText.textSize = 18F
+        originalPriceProductNameText.textSize = 18F
+
+        val paddingValue = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            5F,
+            resources.displayMetrics
+        ).toInt()
+
+        originalPriceProductPriceText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+        originalPriceProductNameText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+
         val tableRow = TableRow(this)
 
         tableRow.addView(originalPriceProductNameText)
@@ -73,6 +87,13 @@ class ElementDetailsActivity : AppCompatActivity() {
         val lowerPriceProductPriceText = TextView(this)
         lowerPriceProductPriceText.text = element?.lowerPrice.toString()
         lowerPriceProductPriceText.layoutParams = params
+
+        // Summary row has the same font size.
+        lowerPriceProductPriceText.textSize = 18F
+        lowerPriceProductNameText.textSize = 18F
+
+        lowerPriceProductPriceText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+        lowerPriceProductNameText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
 
         val tableRow2 = TableRow(this)
 

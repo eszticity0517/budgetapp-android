@@ -2,6 +2,7 @@ package com.example.budgetapp.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -63,6 +64,19 @@ class ElementsFragment : Fragment() {
             val categoryValueText = TextView(this.activity)
             categoryValueText.text = element.value.toString()
             categoryNameText.layoutParams = params
+
+            // Summary row has the same font size.
+            categoryNameText.textSize = 18F
+            categoryValueText.textSize = 18F
+
+            val paddingValue = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                5F,
+                resources.displayMetrics
+            ).toInt()
+
+            categoryNameText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+            categoryValueText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
 
             val tableRow = TableRow(this.activity)
 

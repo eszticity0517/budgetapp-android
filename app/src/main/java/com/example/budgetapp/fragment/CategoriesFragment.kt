@@ -2,6 +2,7 @@ package com.example.budgetapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.budgetapp.activities.CategoryActivity
 
+
 /**
  * A simple [Fragment] subclass for showing existing categories.
  */
@@ -19,8 +21,8 @@ class CategoriesFragment : Fragment() {
     private var categories : HashMap<String, Int>? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         val bundle = arguments
@@ -50,7 +52,10 @@ class CategoriesFragment : Fragment() {
 
         categories?.forEach { category ->
             // Giving TextView-s the parent's layout params.
-            val params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+            val params = TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+            )
 
             val categoryNameText = TextView(this.activity)
             categoryNameText.text = category.key
@@ -59,6 +64,19 @@ class CategoriesFragment : Fragment() {
             val categoryValueText = TextView(this.activity)
             categoryValueText.text = category.value.toString()
             categoryNameText.layoutParams = params
+
+            // Summary row has the same font size.
+            categoryNameText.textSize = 18F
+            categoryValueText.textSize = 18F
+
+            val paddingValue = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                5F,
+                resources.displayMetrics
+            ).toInt()
+
+            categoryNameText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+            categoryValueText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
 
             val tableRow = TableRow(this.activity)
 
@@ -74,7 +92,12 @@ class CategoriesFragment : Fragment() {
                 this.activity?.finish()
             }
 
-            summaryTable.addView(tableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
+            summaryTable.addView(
+                tableRow, TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.FILL_PARENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT
+                )
+            )
         }
     }
 }
