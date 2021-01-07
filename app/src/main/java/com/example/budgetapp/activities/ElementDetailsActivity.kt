@@ -26,14 +26,19 @@ class ElementDetailsActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val intent = intent
-        val categoryName  = intent?.getStringExtra("elementName") as String
+        val elementName  = intent?.getStringExtra("elementName") as String
 
-        actionBar?.title = categoryName
-        supportActionBar?.title = categoryName
+        actionBar?.title = elementName
+        supportActionBar?.title = elementName
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        element = GetElementByName(this, categoryName).execute().get()
+        getElementAndShowInTable(elementName)
+    }
+
+    private fun getElementAndShowInTable(elementName: String)
+    {
+        element = GetElementByName(this, elementName).execute().get()
 
         // Calculating difference between lower and higher price.
         var differenceCalculated = element?.originalPrice!!.minus(element?.lowerPrice!!)
@@ -261,6 +266,9 @@ class ElementDetailsActivity : AppCompatActivity() {
                     originalPriceProductName,
                     element?.id
                 ).execute()
+
+                // Showing changes.
+                getElementAndShowInTable(lowerPriceProductName)
                 dialog.dismiss()
             }
         }
