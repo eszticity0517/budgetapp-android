@@ -1,12 +1,9 @@
 package com.example.budgetapp.activities
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -16,9 +13,8 @@ import com.example.budgetapp.MainActivity
 import com.example.budgetapp.R
 import com.example.budgetapp.fragment.ElementsFragment
 import com.example.budgetapp.fragment.NoElementsFragment
-import com.example.budgetapp.persistence.BudgetAppDatabase
-import com.example.budgetapp.persistence.entities.Category
-import com.example.budgetapp.persistence.entities.Element
+import com.example.budgetapp.persistence.tools.*
+import com.example.budgetapp.persistence.tools.roomtasks.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -49,7 +45,7 @@ class CategoryActivity : AppCompatActivity() {
 
             if (!categoryId.toString().isNullOrEmpty())
             {
-                var elements = MainActivity.GetAllElementsByCategory(
+                var elements = GetAllElementsByCategory(
                     categoryId = categoryId,
                     mContext = this
                 ).execute()?.get()
@@ -74,7 +70,7 @@ class CategoryActivity : AppCompatActivity() {
 
                     for(element in elements)
                     {
-                        var elements = MainActivity.GetAllElementsByCategory(
+                        var elements = GetAllElementsByCategory(
                             categoryId = categoryId,
                             mContext = this
                         ).execute()?.get()
@@ -193,7 +189,7 @@ class CategoryActivity : AppCompatActivity() {
                 text.isNullOrEmpty() -> {
                     input?.error = getString(R.string.name_is_mandatory)
                 }
-                MainActivity.GetAllCategories(this).execute().get().any { it?.name == text && it?.id != categoryId} -> {
+                GetAllCategories(this).execute().get().any { it?.name == text && it?.id != categoryId} -> {
                     input?.error = getString(R.string.name_is_reserved)
                 }
                 else -> {
@@ -311,141 +307,4 @@ class CategoryActivity : AppCompatActivity() {
             }
         }
     }
-
-    /**
-     * Gets all existing elements from the database.
-     */
-    class GetAllElements(mContext: Context): AsyncTask<String, Long, List<Element?>>() {
-        private var context: Context = mContext
-
-        override fun doInBackground(json: Array<String?>?): List<Element?>? {
-            var elements: List<Element?>?
-
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                elements = budgetAppDatabase.ElementDao().getAll()
-                budgetAppDatabase.close()
-                elements
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to get elements.", e)
-                null
-            }
-        }
-    }
-    /**
-     * Inserts a very new element in the database.
-     */
-    class SaveElement(
-        mContext: Context,
-        lowerPrice: Int,
-        originalPrice: Int,
-        lowerPriceProductName: String,
-        originalPriceProductName: String,
-        categoryId: Long?
-    ): AsyncTask<String, Long, Element?>() {
-        private var context: Context = mContext
-        private var lowerPriceProductName = lowerPriceProductName
-        private var originalPriceProductName = originalPriceProductName
-
-        private var lowerPrice = lowerPrice
-        private var originalPrice = originalPrice
-        private var categoryId = categoryId
-
-        override fun doInBackground(json: Array<String?>?): Element? {
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                var element = Element(
-                    lowerPrice = lowerPrice,
-                    originalPrice = originalPrice,
-                    lowerPriceProductName = lowerPriceProductName,
-                    originalPriceProductName = originalPriceProductName,
-                    categoryId = categoryId
-                )
-                budgetAppDatabase.ElementDao().save(element)
-                budgetAppDatabase.close()
-                element
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to save element.", e)
-                null
-            }
-        }
-    }
-
-
-
-    // TODO: this has a duplicate, find a way to put everything to helper class.
-    /**
-     * Gets all existing elements related to a specific category spotted by its ID.
-     */
-    class GetCategoryIdByName(mContext: Context, categoryName: String?):  AsyncTask<String, Long, Long?>() {
-        private var context: Context = mContext
-        private var categoryName: String? = categoryName
-
-        override fun doInBackground(json: Array<String?>?): Long? {
-            var categoryId: Long?
-
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                categoryId = budgetAppDatabase.CategoryDao().findByName(categoryName)?.id
-                budgetAppDatabase.close()
-                categoryId
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to get elements by category ID.", e)
-                null
-            }
-        }
-    }
-
-    /**
-     * Inserts a very new category in the database.
-     */
-    class UpdateCategoryName(mContext: Context, categoryName: String, categoryId: Long?): AsyncTask<String, Long, Category?>() {
-        private var context: Context = mContext
-        private var categoryName = categoryName
-        private var categoryId = categoryId
-
-        override fun doInBackground(json: Array<String?>?): Category? {
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                var category = budgetAppDatabase.CategoryDao().findById(categoryId)
-                category?.name = categoryName
-                budgetAppDatabase.CategoryDao().update(category)
-                budgetAppDatabase.close()
-                category
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to save category.", e)
-                null
-            }
-        }
-    }
-
-    /**
-     * Deletes category from the database.
-     */
-    class DeleteCategory(mContext: Context, categoryId: Long?): AsyncTask<String, Long, Int>() {
-        private var context: Context = mContext
-        private var categoryId = categoryId
-
-        override fun doInBackground(json: Array<String?>?): Int? {
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                // Deleting related elements first.
-                 budgetAppDatabase.ElementDao().deleteAllByCategoryId(categoryId)
-
-                // .. then deleting the actual category.
-                val categoryDeletion = budgetAppDatabase.CategoryDao().deleteById(categoryId)
-                categoryDeletion
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to delete category.", e)
-                null
-            }
-        }
-    }
-
-
 }

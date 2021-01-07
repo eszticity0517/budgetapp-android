@@ -1,12 +1,9 @@
 package com.example.budgetapp.activities
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -14,8 +11,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetapp.MainActivity
 import com.example.budgetapp.R
-import com.example.budgetapp.persistence.BudgetAppDatabase
-import com.example.budgetapp.persistence.entities.Element
+import com.example.budgetapp.persistence.tools.*
+import com.example.budgetapp.persistence.tools.roomtasks.*
 
 class ElementDetailsActivity : AppCompatActivity() {
 
@@ -213,11 +210,11 @@ class ElementDetailsActivity : AppCompatActivity() {
                     originalPriceProductPriceText?.error = getString(R.string.price_is_mandatory)
                 }
 
-                CategoryActivity.GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName && it?.id != elementId} -> {
+                GetAllElements(this).execute().get().any { it?.lowerPriceProductName == lowerPriceProductName && it?.id != elementId} -> {
                     lowerPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
 
-                CategoryActivity.GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName && it?.id != elementId} -> {
+                GetAllElements(this).execute().get().any { it?.originalPriceProductName == originalPriceProductName && it?.id != elementId} -> {
                     originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
 
@@ -260,114 +257,6 @@ class ElementDetailsActivity : AppCompatActivity() {
                 val intent = Intent(this@ElementDetailsActivity, MainActivity::class.java)
                 intent.putExtra("categoryName", GetCategoryNameById(this, elementCategoryId).execute().get())
                 startActivity(intent)
-            }
-        }
-    }
-
-
-    // TODO: this has a duplicate, find a way to put everything to helper class.
-    /**
-     * Gets all existing elements related to a specific category spotted by its ID.
-     */
-    class GetCategoryNameById(mContext: Context, categoryId: Long?):  AsyncTask<String, Long, String?>() {
-        private var context: Context = mContext
-        private var categoryId: Long? = categoryId
-
-        override fun doInBackground(json: Array<String?>?): String? {
-            var categoryName: String?
-
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                categoryName = budgetAppDatabase.CategoryDao().findById(categoryId)?.name
-                budgetAppDatabase.close()
-                categoryName
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to get category.", e)
-                null
-            }
-        }
-    }
-
-    /**
-     * Deletes category from the database.
-     */
-    class DeleteElement(mContext: Context, elementId: Long?): AsyncTask<String, Long, Int>() {
-        private var context: Context = mContext
-        private var elementId = elementId
-
-        override fun doInBackground(json: Array<String?>?): Int? {
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                val elementDeletion = budgetAppDatabase.ElementDao().deleteById(elementId)
-                elementDeletion
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to delete category.", e)
-                null
-            }
-        }
-    }
-
-    /**
-     * Inserts a very new category in the database.
-     */
-    class UpdateElement(
-            mContext: Context,
-            lowerPrice: Int,
-            originalPrice: Int,
-            lowerPriceProductName: String,
-            originalPriceProductName: String,
-            elementId: Long?
-    ): AsyncTask<String, Long, Element?>() {
-        private var context: Context = mContext
-        private var lowerPriceProductName = lowerPriceProductName
-        private var originalPriceProductName = originalPriceProductName
-
-        private var lowerPrice = lowerPrice
-        private var originalPrice = originalPrice
-        private var elementId = elementId
-
-        override fun doInBackground(json: Array<String?>?): Element? {
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                var element = budgetAppDatabase.ElementDao().findById(elementId)
-                element?.lowerPrice = lowerPrice
-                element?.lowerPriceProductName = lowerPriceProductName
-                element?.originalPrice = originalPrice
-                element?.originalPriceProductName = originalPriceProductName
-
-                budgetAppDatabase.ElementDao().update(element)
-                budgetAppDatabase.close()
-                element
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to save category.", e)
-                null
-            }
-        }
-    }
-
-
-    /**
-     * Gets element with the provided name.
-     */
-    class GetElementByName(mContext: Context, elementName: String): AsyncTask<String, Long, Element?>() {
-        private var context: Context = mContext
-        private var elementName: String = elementName
-
-        override fun doInBackground(json: Array<String?>?): Element? {
-            var element: Element?
-
-            return try {
-                val budgetAppDatabase = BudgetAppDatabase(context)
-
-                element = budgetAppDatabase.ElementDao().findByLowerPriceProductName(elementName)
-                budgetAppDatabase.close()
-                element
-            } catch (e: Exception) {
-                Log.e("", "Error occurred while tried to get element.", e)
-                null
             }
         }
     }
