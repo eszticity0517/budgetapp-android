@@ -1,6 +1,7 @@
 package com.example.budgetapp
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import com.example.budgetapp.activities.CategoryActivity
 
@@ -41,12 +43,45 @@ class CategoriesFragment : Fragment() {
             summaryValueCalculated += category.value
         }
 
-        val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
+        // Add summary text and value first to see the saved money amount.
 
-        // Showing all the saved money.
-        summaryValue.text = "$summaryValueCalculated ${getString(R.string.currency)}"
+        val paddingValue = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                5F,
+                resources.displayMetrics
+        ).toInt()
 
         val summaryTable : TableLayout = view.findViewById(R.id.summaryTable) as TableLayout;
+
+        // Giving TextView-s the parent's layout params.
+        val params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+
+        val summaryText = TextView(this.activity)
+        summaryText.text = "${getString(R.string.in_all)}"
+        summaryText.layoutParams = params
+        summaryText.setTextColor(getColor(requireActivity(), android.R.color.holo_purple))
+        summaryText.setTypeface(null, Typeface.BOLD);
+
+        val summaryValueText = TextView(this.activity)
+        summaryValueText.text = "$summaryValueCalculated ${getString(R.string.currency)}"
+        summaryValueText.layoutParams = params
+        summaryValueText.setTextColor(getColor(requireActivity(), android.R.color.holo_purple))
+        summaryValueText.setTypeface(null, Typeface.BOLD);
+
+        // Summary row has the same font size.
+        summaryText.textSize = 18F
+        summaryValueText.textSize = 18F
+
+        summaryText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+        summaryValueText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+
+        val summaryTableRow = TableRow(this.activity)
+
+        summaryTableRow.addView(summaryText)
+        summaryTableRow.addView(summaryValueText)
+
+        summaryTable.addView(summaryTableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
+
 
         // Fill table programmatically with category and price data.
 
