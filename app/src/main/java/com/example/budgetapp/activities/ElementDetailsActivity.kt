@@ -60,7 +60,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         val params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
 
         val summaryText = TextView(this)
-        summaryText.text = element?.originalPriceProductName
+        summaryText.text = "${getString(R.string.in_all)}"
         summaryText.layoutParams = params
         summaryText.setTextColor(getColor(android.R.color.holo_purple))
         summaryText.setTypeface(null, Typeface.BOLD);

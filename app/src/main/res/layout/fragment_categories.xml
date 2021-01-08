@@ -18,29 +18,6 @@
             android:id="@+id/summaryRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/in_all"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="#CE6B0F"
-                android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
-
-
-            <TextView
-                android:id="@+id/summaryValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="TextView"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#CE6B0F"
-                android:textSize="18sp"
-                android:textStyle="bold"></TextView>
-
         </TableRow>
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
