@@ -2,6 +2,7 @@ package com.example.budgetapp.activities
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
 import android.util.TypedValue
@@ -43,17 +44,46 @@ class ElementDetailsActivity : AppCompatActivity() {
         // Calculating difference between lower and higher price.
         var differenceCalculated = element?.originalPrice!!.minus(element?.lowerPrice!!)
 
-        val differenceValue: TextView = findViewById(R.id.differenceValue);
-
-        // Showing all the saved money.
-        differenceValue.text = "$differenceCalculated ${getString(R.string.currency)}"
-
         // Put original and cheaper product data in a table.
 
         val summaryTable : TableLayout = findViewById(R.id.summaryTable)
 
+        // Add summary text and value first to see the saved money amount.
+
+        val paddingValue = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                5F,
+                resources.displayMetrics
+        ).toInt()
+
         // Giving TextView-s the parent's layout params.
         val params = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+
+        val summaryText = TextView(this)
+        summaryText.text = element?.originalPriceProductName
+        summaryText.layoutParams = params
+        summaryText.setTextColor(getColor(android.R.color.holo_purple))
+        summaryText.setTypeface(null, Typeface.BOLD);
+
+        val summaryValueText = TextView(this)
+        summaryValueText.text = "$differenceCalculated ${getString(R.string.currency)}"
+        summaryValueText.layoutParams = params
+        summaryValueText.setTextColor(getColor(android.R.color.holo_purple))
+        summaryValueText.setTypeface(null, Typeface.BOLD);
+
+        // Summary row has the same font size.
+        summaryText.textSize = 18F
+        summaryValueText.textSize = 18F
+
+        summaryText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+        summaryValueText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
+
+        val summaryTableRow = TableRow(this)
+
+        summaryTableRow.addView(summaryText)
+        summaryTableRow.addView(summaryValueText)
+
+        summaryTable.addView(summaryTableRow, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
 
         // Put original product data in table.
         val originalPriceProductNameText = TextView(this)
@@ -67,12 +97,6 @@ class ElementDetailsActivity : AppCompatActivity() {
         // Summary row has the same font size.
         originalPriceProductPriceText.textSize = 18F
         originalPriceProductNameText.textSize = 18F
-
-        val paddingValue = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            5F,
-            resources.displayMetrics
-        ).toInt()
 
         originalPriceProductPriceText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
         originalPriceProductNameText.setPadding(paddingValue, paddingValue, paddingValue, paddingValue)
@@ -269,7 +293,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
                 // Just change the title, lower price product name is the main reference of an element.
                 supportActionBar?.title = lowerPriceProductName
-                
+
                 dialog.dismiss()
             }
         }
