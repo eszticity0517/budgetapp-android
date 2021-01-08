@@ -44,7 +44,7 @@ class CategoriesFragment : Fragment() {
         val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
 
         // Showing all the saved money.
-        summaryValue.text = "$summaryValueCalculated HUF"
+        summaryValue.text = "$summaryValueCalculated ${R.string.currency}"
 
         val summaryTable : TableLayout = view.findViewById(R.id.summaryTable) as TableLayout;
 

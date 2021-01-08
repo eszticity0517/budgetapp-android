@@ -46,7 +46,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         val differenceValue: TextView = findViewById(R.id.differenceValue);
 
         // Showing all the saved money.
-        differenceValue.text = "$differenceCalculated HUF"
+        differenceValue.text = "$differenceCalculated ${R.string.currency}"
 
         // Put original and cheaper product data in a table.
 
@@ -153,7 +153,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         val originalPriceProductNameText = EditText(this)
         originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
-        originalPriceProductNameText.hint = "Original product name"
+        originalPriceProductNameText.hint = getString(R.string.original_product_name)
         originalPriceProductNameText.setSingleLine()
         originalPriceProductNameText.setText(element?.originalPriceProductName)
 
@@ -164,7 +164,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         val originalPriceProductPriceText = EditText(this)
         originalPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
-        originalPriceProductPriceText.hint = "Original product price"
+        originalPriceProductPriceText.hint = getString(R.string.original_product_price)
         originalPriceProductPriceText.setSingleLine()
         originalPriceProductPriceText.setText(element?.originalPrice.toString())
 
@@ -175,7 +175,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         val lowerPriceProductNameText = EditText(this)
         lowerPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
-        lowerPriceProductNameText.hint = "Cheaper product name"
+        lowerPriceProductNameText.hint = getString(R.string.cheaper_product_name)
         lowerPriceProductNameText.setSingleLine()
         lowerPriceProductNameText.setText(element?.lowerPriceProductName)
 
@@ -186,7 +186,7 @@ class ElementDetailsActivity : AppCompatActivity() {
 
         val lowerPriceProductPriceText = EditText(this)
         lowerPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
-        lowerPriceProductPriceText.hint = "Cheaper product price"
+        lowerPriceProductPriceText.hint =  getString(R.string.cheaper_product_price)
         lowerPriceProductPriceText.setSingleLine()
         lowerPriceProductPriceText.setText(element?.lowerPrice.toString())
 
@@ -206,7 +206,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         linearLayout.addView(container4)
 
         val builder = AlertDialog.Builder(this)
-            .setTitle("New element")
+            .setTitle(R.string.edit_element)
             .setView(linearLayout)
             .setPositiveButton(
                     android.R.string.ok, null
@@ -277,8 +277,8 @@ class ElementDetailsActivity : AppCompatActivity() {
     private fun CreateDeleteElementDialog()
     {
         val builder = AlertDialog.Builder(this)
-            .setTitle("Delete element")
-            .setMessage("Are you sure?")
+            .setTitle(R.string.delete_element)
+            .setMessage(R.string.are_you_sure)
             .setPositiveButton(
                     android.R.string.ok, null
             )
