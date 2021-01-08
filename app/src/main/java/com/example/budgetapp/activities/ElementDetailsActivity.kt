@@ -46,7 +46,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         val differenceValue: TextView = findViewById(R.id.differenceValue);
 
         // Showing all the saved money.
-        differenceValue.text = "$differenceCalculated ${R.string.currency}"
+        differenceValue.text = "$differenceCalculated ${getString(R.string.currency)}"
 
         // Put original and cheaper product data in a table.
 
@@ -61,7 +61,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         originalPriceProductNameText.layoutParams = params
 
         val originalPriceProductPriceText = TextView(this)
-        originalPriceProductPriceText.text = element?.originalPrice.toString()
+        originalPriceProductPriceText.text = "${element?.originalPrice.toString()} ${getString(R.string.currency)}"
         originalPriceProductPriceText.layoutParams = params
 
         // Summary row has the same font size.
@@ -90,7 +90,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         lowerPriceProductNameText.layoutParams = params
 
         val lowerPriceProductPriceText = TextView(this)
-        lowerPriceProductPriceText.text = element?.lowerPrice.toString()
+        lowerPriceProductPriceText.text = "${element?.lowerPrice.toString()} ${getString(R.string.currency)}"
         lowerPriceProductPriceText.layoutParams = params
 
         // Summary row has the same font size.
