@@ -202,13 +202,8 @@ class CategoryActivity : AppCompatActivity() {
                 else -> {
                     UpdateCategoryName(this, text, category?.id).execute()
 
-                    // Since categoryName comes from intent, new activity is opened here.
-                    val intent = Intent(this@CategoryActivity, CategoryActivity::class.java)
-                    intent.putExtra("categoryName", text)
-                    startActivity(intent)
-                    finish()
-
-                    // getAllElementsAndShowFragment(category?.name)
+                    // Just change the title.
+                    supportActionBar?.title = text
 
                     dialog.dismiss()
                 }

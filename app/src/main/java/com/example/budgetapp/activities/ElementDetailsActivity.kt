@@ -267,8 +267,9 @@ class ElementDetailsActivity : AppCompatActivity() {
                     element?.id
                 ).execute()
 
-                // Showing changes.
-                getElementAndShowInTable(lowerPriceProductName)
+                // Just change the title, lower price product name is the main reference of an element.
+                supportActionBar?.title = lowerPriceProductName
+                
                 dialog.dismiss()
             }
         }
