@@ -36,4 +36,20 @@
     <!-- icon button titles -->
     <string name="fab_category">Icon button for creating new category.</string>
     <string name="fab_element">Icon button for creating new element.</string>
+
+    <!-- Dialog texts -->
+    <string name="delete_category">Delete category</string>
+    <string name="new_category">New category</string>
+    <string name="rename_category">Rename category</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="delete_element">Delete element</string>
+    <string name="new_element">New element</string>
+    <string name="edit_element">Edit element</string>
+
+    <string name="original_product_price">Original product price</string>
+    <string name="cheaper_product_price">Cheaper product price</string>
+    <string name="original_product_name">Original product name</string>
+    <string name="cheaper_product_name">Cheaper product name</string>
+
+    <string name="currency">HUF</string>
 </resources>

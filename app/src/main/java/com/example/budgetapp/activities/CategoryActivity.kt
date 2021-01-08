@@ -139,8 +139,8 @@ class CategoryActivity : AppCompatActivity() {
     private fun createDeleteCategoryDialog()
     {
         val builder = AlertDialog.Builder(this)
-            .setTitle("Delete category")
-            .setMessage("Are you sure?")
+            .setTitle(R.string.delete_category)
+            .setMessage(R.string.are_you_sure)
             .setPositiveButton(
                 android.R.string.ok, null
             )
@@ -179,7 +179,7 @@ class CategoryActivity : AppCompatActivity() {
         container.addView(input);
 
         val builder = AlertDialog.Builder(this)
-            .setTitle("Rename category")
+            .setTitle(R.string.rename_category)
             .setView(container)
             .setPositiveButton(
                 android.R.string.ok, null
@@ -227,7 +227,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val originalPriceProductNameText = EditText(this)
         originalPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
-        originalPriceProductNameText.hint = "Original product name"
+        originalPriceProductNameText.hint = getString(R.string.original_product_name)
         originalPriceProductNameText.setSingleLine()
 
         originalPriceProductNameText.layoutParams = params
@@ -237,7 +237,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val originalPriceProductPriceText = EditText(this)
         originalPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
-        originalPriceProductPriceText.hint = "Original product price"
+        originalPriceProductPriceText.hint =  getString(R.string.original_product_price)
         originalPriceProductPriceText.setSingleLine()
 
         originalPriceProductPriceText.layoutParams = params
@@ -247,7 +247,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val lowerPriceProductNameText = EditText(this)
         lowerPriceProductNameText.inputType = InputType.TYPE_CLASS_TEXT
-        lowerPriceProductNameText.hint = "Cheaper product name"
+        lowerPriceProductNameText.hint =  getString(R.string.cheaper_product_name)
         lowerPriceProductNameText.setSingleLine()
 
         lowerPriceProductNameText.layoutParams = params
@@ -257,7 +257,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val lowerPriceProductPriceText = EditText(this)
         lowerPriceProductPriceText.inputType = InputType.TYPE_CLASS_NUMBER
-        lowerPriceProductPriceText.hint = "Cheaper product price"
+        lowerPriceProductPriceText.hint = getString(R.string.cheaper_product_price)
         lowerPriceProductPriceText.setSingleLine()
 
         lowerPriceProductPriceText.layoutParams = params
@@ -276,7 +276,7 @@ class CategoryActivity : AppCompatActivity() {
         linearLayout.addView(container4)
 
         val builder = AlertDialog.Builder(this)
-                .setTitle("New element")
+                .setTitle(R.string.new_element)
                 .setView(linearLayout)
                 .setPositiveButton(
                     android.R.string.ok, null

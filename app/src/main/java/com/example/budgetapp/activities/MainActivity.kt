@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         container.addView(input);
 
         val builder = AlertDialog.Builder(this)
-                .setTitle("New category")
+                .setTitle(R.string.new_category)
                 .setView(container)
                 .setPositiveButton(
                         android.R.string.ok, null

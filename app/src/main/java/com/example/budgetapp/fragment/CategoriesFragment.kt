@@ -44,7 +44,7 @@ class CategoriesFragment : Fragment() {
         val summaryValue: TextView = view.findViewById(R.id.summaryValue) as TextView;
 
         // Showing all the saved money.
-        summaryValue.text = "$summaryValueCalculated HUF"
+        summaryValue.text = "$summaryValueCalculated ${getString(R.string.currency)}"
 
         val summaryTable : TableLayout = view.findViewById(R.id.summaryTable) as TableLayout;
 
@@ -62,7 +62,7 @@ class CategoriesFragment : Fragment() {
             categoryNameText.layoutParams = params
 
             val categoryValueText = TextView(this.activity)
-            categoryValueText.text = category.value.toString()
+            categoryValueText.text = "${category.value} ${getString(R.string.currency)}"
             categoryNameText.layoutParams = params
 
             // Summary row has the same font size.
