@@ -113,10 +113,12 @@ class ElementDetailsActivity : AppCompatActivity() {
         val lowerPriceProductNameText = TextView(this)
         lowerPriceProductNameText.text = element?.lowerPriceProductName
         lowerPriceProductNameText.layoutParams = params
+        lowerPriceProductNameText.setTextColor(getColor(android.R.color.holo_green_dark))
 
         val lowerPriceProductPriceText = TextView(this)
         lowerPriceProductPriceText.text = "${element?.lowerPrice.toString()} ${getString(R.string.currency)}"
         lowerPriceProductPriceText.layoutParams = params
+        lowerPriceProductPriceText.setTextColor(getColor(android.R.color.holo_green_dark))
 
         // Summary row has the same font size.
         lowerPriceProductPriceText.textSize = 18F
