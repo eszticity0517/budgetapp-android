@@ -135,15 +135,14 @@ class ElementDetailsActivity : AppCompatActivity() {
         summaryTable.addView(tableRow2, TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
     }
 
-    // Let's leave it here for now.
     override fun onBackPressed() {
         // Go back to summary page.
-//        super.onBackPressed()
-//        val intent = Intent(this, CategoryActivity::class.java)
-//        intent.putExtra("categoryName", GetCategoryById(this, element?.categoryId).execute().get()?.name)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-//        startActivity(intent)
-//        finish()
+        super.onBackPressed()
+        val intent = Intent(this, CategoryActivity::class.java)
+        intent.putExtra("categoryName", GetCategoryById(this, element?.categoryId).execute().get()?.name)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+        finish()
     }
 
 

@@ -132,6 +132,11 @@ class CategoryActivity : AppCompatActivity() {
         if (id == R.id.deleteButton) {
             createDeleteCategoryDialog()
         }
+
+        if (id == android.R.id.home) {
+            onBackPressed()
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -331,5 +336,14 @@ class CategoryActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        // Go back to summary page.
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+        finish()
     }
 }

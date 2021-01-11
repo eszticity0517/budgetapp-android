@@ -12,24 +12,17 @@
         <activity
             android:name=".activities.ElementDetailsActivity"
             android:label="@string/title_activity_element_details"
-            android:parentActivityName=".activities.CategoryActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BudgetApp.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.budgetapp.activities.CategoryActivity" />
         </activity>
 
         <activity
             android:name=".activities.CategoryActivity"
             android:label="@string/title_activity_category"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BudgetApp.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.budgetapp.MainActivity" />
         </activity>
         <activity
             android:name=".MainActivity"
