@@ -136,15 +136,15 @@ class ElementDetailsActivity : AppCompatActivity() {
     }
 
     // Let's leave it here for now.
-//    override fun onBackPressed() {
-//        // Go back to summary page.
+    override fun onBackPressed() {
+        // Go back to summary page.
 //        super.onBackPressed()
 //        val intent = Intent(this, CategoryActivity::class.java)
-//        intent.putExtra("categoryName", "foodie")
+//        intent.putExtra("categoryName", GetCategoryById(this, element?.categoryId).execute().get()?.name)
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 //        startActivity(intent)
 //        finish()
-//    }
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -156,11 +156,11 @@ class ElementDetailsActivity : AppCompatActivity() {
         val id: Int = item.itemId
 
         if (id == R.id.editButton) {
-            CreateEditElementDialog()
+            createEditElementDialog()
         }
 
         if (id == R.id.deleteButton) {
-            CreateDeleteElementDialog()
+            createDeleteElementDialog()
         }
 
         if (id == android.R.id.home) {
@@ -170,7 +170,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun CreateEditElementDialog()
+    private fun createEditElementDialog()
     {
         val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.leftMargin = resources.getDimensionPixelSize(R.dimen.fab_margin)
@@ -305,7 +305,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun CreateDeleteElementDialog()
+    private fun createDeleteElementDialog()
     {
         val builder = AlertDialog.Builder(this)
                 .setTitle(R.string.delete_element)
