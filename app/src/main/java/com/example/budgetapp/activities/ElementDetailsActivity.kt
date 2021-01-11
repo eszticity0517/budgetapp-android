@@ -47,6 +47,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         // Put original and cheaper product data in a table.
 
         val summaryTable : TableLayout = findViewById(R.id.summaryTable)
+        summaryTable.removeAllViews()
 
         // Add summary text and value first to see the saved money amount.
 
@@ -161,7 +162,7 @@ class ElementDetailsActivity : AppCompatActivity() {
         }
 
         if (id == android.R.id.home) {
-           onBackPressed()
+            onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
@@ -230,12 +231,12 @@ class ElementDetailsActivity : AppCompatActivity() {
         linearLayout.addView(container4)
 
         val builder = AlertDialog.Builder(this)
-            .setTitle(R.string.edit_element)
-            .setView(linearLayout)
-            .setPositiveButton(
-                    android.R.string.ok, null
-            )
-            .setNegativeButton(android.R.string.cancel, null)
+                .setTitle(R.string.edit_element)
+                .setView(linearLayout)
+                .setPositiveButton(
+                        android.R.string.ok, null
+                )
+                .setNegativeButton(android.R.string.cancel, null)
 
         val dialog =builder.show()
 
@@ -266,7 +267,7 @@ class ElementDetailsActivity : AppCompatActivity() {
                 }
 
                 if (GetAllElements(this).execute().get()
-                        .any { it?.lowerPriceProductName == lowerPriceProductName  && it?.id != element?.id }
+                                .any { it?.lowerPriceProductName == lowerPriceProductName  && it?.id != element?.id }
                 ) {
                     lowerPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
@@ -276,23 +277,26 @@ class ElementDetailsActivity : AppCompatActivity() {
                 }
 
                 if (GetAllElements(this).execute().get()
-                        .any { it?.originalPriceProductName == originalPriceProductName  && it?.id != element?.id}
+                                .any { it?.originalPriceProductName == originalPriceProductName  && it?.id != element?.id}
                 ) {
                     originalPriceProductNameText?.error = getString(R.string.name_is_reserved)
                 }
             }
             else {
                 UpdateElement(
-                    this,
-                    lowerPriceProductPrice.toInt(),
-                    originalPriceProductPrice.toInt(),
-                    lowerPriceProductName,
-                    originalPriceProductName,
-                    element?.id
+                        this,
+                        lowerPriceProductPrice.toInt(),
+                        originalPriceProductPrice.toInt(),
+                        lowerPriceProductName,
+                        originalPriceProductName,
+                        element?.id
                 ).execute()
 
                 // Just change the title, lower price product name is the main reference of an element.
                 supportActionBar?.title = lowerPriceProductName
+
+                // Show changed data.
+                getElementAndShowInTable(lowerPriceProductName)
 
                 dialog.dismiss()
             }
@@ -302,12 +306,12 @@ class ElementDetailsActivity : AppCompatActivity() {
     private fun CreateDeleteElementDialog()
     {
         val builder = AlertDialog.Builder(this)
-            .setTitle(R.string.delete_element)
-            .setMessage(R.string.are_you_sure)
-            .setPositiveButton(
-                    android.R.string.ok, null
-            )
-            .setNegativeButton(android.R.string.cancel, null)
+                .setTitle(R.string.delete_element)
+                .setMessage(R.string.are_you_sure)
+                .setPositiveButton(
+                        android.R.string.ok, null
+                )
+                .setNegativeButton(android.R.string.cancel, null)
 
         val dialog =builder.show()
 
